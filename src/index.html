@@ -3,13 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ki-Aikido Prato - Scuola di Arti Marziali</title>
-    <meta name="description" content="Scuola di Ki-Aikido a Prato. Pratica l'arte marziale giapponese che unisce mente e corpo attraverso il Ki.">
+    <title>Ki Aikido Prato | Scuola Arti Marziali Toscana - Lezione Gratuita</title>
+    <meta name="description" content="Ki Aikido Prato: scuola arti marziali in Toscana affiliata Ki no Kenkyukai. Corsi Aikido Prato per adulti. Prima lezione gratuita con maestri certificati.">
+    <meta name="keywords" content="ki aikido prato, aikido prato, arti marziali prato, scuola aikido toscana, ki no kenkyukai prato, aikido toscana, dojo prato">
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.kiaikidoprato.com/">
+    <meta property="og:title" content="Ki Aikido Prato | Scuola Arti Marziali Toscana">
+    <meta property="og:description" content="Scuola di arti marziali Ki Aikido a Prato, Toscana. Affiliata alla Ki no Kenkyukai Internationale. Prima lezione gratuita.">
+    <meta property="og:image" content="https://www.kiaikidoprato.com/img/dojo.png">
+    <meta property="og:locale" content="it_IT">
+    <link rel="canonical" href="https://www.kiaikidoprato.com/">
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SportsActivityLocation",
+      "name": "Ki Aikido Prato",
+      "description": "Scuola di arti marziali Ki Aikido a Prato, Toscana. Affiliata alla Ki no Kenkyukai Internationale.",
+      "image": "https://www.kiaikidoprato.com/img/dojo.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Viale Guglielmo Marconi, 36",
+        "addressLocality": "Prato",
+        "addressRegion": "Toscana",
+        "postalCode": "59100",
+        "addressCountry": "IT"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "43.86125",
+        "longitude": "11.116764"
+      },
+      "telephone": "+393356909025",
+      "email": "info@kiaikidoprato.com",
+      "url": "https://www.kiaikidoprato.com",
+      "priceRange": "€€",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Tuesday", "Thursday"],
+          "opens": "21:30",
+          "closes": "23:00"
+        }
+      ],
+      "sameAs": [],
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "Ki no Kenkyukai Internationale",
+        "url": "https://www.ki-aikido.or.jp"
+      }
+    }
+    </script>
+    <!-- Preconnect per Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Caricamento asincrono dei font (solo weights utilizzati: 300, 400, 500) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap"></noscript>
+
+    <!-- Critical CSS inline per First Paint -->
+    <style>
+        :root{--ink-black:#1a1a1a;--paper-cream:#f5f0e8;--vermillion:#c73e1d;--white:#fff}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--paper-cream);color:var(--ink-black);min-height:100vh;line-height:1.6;overflow-x:hidden}
+    </style>
+
+    <!-- Caricamento asincrono CSS principale -->
+    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
     <style>
         /* Hero Section */
         .hero {
@@ -484,8 +548,8 @@
         <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h4>Ki-Aikido Prato</h4>
-                <p>Scuola affiliata alla Ki no Kenkyukai Internationale.</p>
+                <h4>Ki Aikido Prato</h4>
+                <p>Scuola di arti marziali a Prato, Toscana. Affiliata alla Ki no Kenkyukai Internationale.</p>
             </div>
             <div class="footer-section">
                 <h4>Link Utili</h4>
@@ -504,6 +568,6 @@
             <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
         </div>
     </footer>
-    <script src="/js/main.js"></script>
+    <script src="/js/main.js" defer></script>
 </body>
 </html>

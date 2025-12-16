@@ -3,13 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking - Ki-Aikido Prato</title>
-    <meta name="description" content="I praticanti del Ki-Aikido Prato e i loro gradi.">
+    <title>Ranking - Ki Aikido Prato | Praticanti Arti Marziali Toscana</title>
+    <meta name="description" content="Praticanti e gradi della scuola Ki Aikido Prato. Maestri Dan e studenti Kyu della nostra scuola di arti marziali in Toscana affiliata Ki no Kenkyukai.">
+    <meta name="keywords" content="ranking aikido prato, praticanti aikido, ki aikido prato, arti marziali prato, scuola aikido toscana, dan kyu aikido">
+    <link rel="canonical" href="https://www.kiaikidoprato.com/ranking.html">
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <!-- Preconnect per Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Caricamento asincrono dei font (solo weights utilizzati) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap"></noscript>
+
+    <!-- Critical CSS inline -->
+    <style>:root{--ink-black:#1a1a1a;--paper-cream:#f5f0e8;--vermillion:#c73e1d;--white:#fff}*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--paper-cream);color:var(--ink-black);min-height:100vh;line-height:1.6;overflow-x:hidden}</style>
+
+    <!-- Caricamento asincrono CSS principale -->
+    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
     <style>
         .ranking-intro {
             max-width: 700px;
@@ -310,6 +322,6 @@
             <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
         </div>
     </footer>
-    <script src="/js/main.js"></script>
+    <script src="/js/main.js" defer></script>
 </body>
 </html>

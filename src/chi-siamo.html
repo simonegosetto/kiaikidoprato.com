@@ -3,13 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Siamo - Ki-Aikido Prato</title>
-    <meta name="description" content="Scopri la storia del Ki-Aikido Prato, i nostri insegnanti e le sedi dove pratichiamo.">
+    <title>Chi Siamo - Ki Aikido Prato | Scuola Arti Marziali Toscana</title>
+    <meta name="description" content="Scuola Ki Aikido Prato affiliata Ki no Kenkyukai. Scopri i nostri maestri, la storia del dojo e le sedi a Prato dove praticare arti marziali giapponesi.">
+    <meta name="keywords" content="ki aikido prato, aikido prato, arti marziali prato, scuola aikido toscana, ki no kenkyukai prato, dojo prato, maestri aikido">
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.kiaikidoprato.com/chi-siamo.html">
+    <meta property="og:title" content="Chi Siamo - Ki Aikido Prato">
+    <meta property="og:description" content="Scuola Ki Aikido Prato affiliata Ki no Kenkyukai. Scopri i nostri maestri e la storia del dojo.">
+    <meta property="og:image" content="https://www.kiaikidoprato.com/img/dojo.png">
+    <link rel="canonical" href="https://www.kiaikidoprato.com/chi-siamo.html">
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <!-- Preconnect per Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Caricamento asincrono dei font (solo weights utilizzati) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap"></noscript>
+
+    <!-- Critical CSS inline -->
+    <style>:root{--ink-black:#1a1a1a;--paper-cream:#f5f0e8;--vermillion:#c73e1d;--white:#fff}*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--paper-cream);color:var(--ink-black);min-height:100vh;line-height:1.6;overflow-x:hidden}</style>
+
+    <!-- Caricamento asincrono CSS principale -->
+    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
     <style>
         .about-intro {
             max-width: 800px;
@@ -334,10 +352,10 @@
     <!-- History -->
     <section class="history-section">
         <div class="history-content slide-up">
-            <h2>La Nostra Storia</h2>
+            <h2>La Nostra Storia a Prato</h2>
             <p>
-                Il dojo di Prato nasce dalla passione di un gruppo di praticanti
-                che hanno voluto portare nella loro città gli insegnamenti del Ki-Aikido.
+                La scuola di Aikido a Prato nasce dalla passione di un gruppo di praticanti
+                che hanno voluto portare nella loro città toscana gli insegnamenti del Ki Aikido.
             </p>
             <p>
                 Nel corso degli anni, abbiamo formato centinaia di allievi,
@@ -351,7 +369,7 @@
             </p>
         </div>
         <div class="history-image slide-up" style="animation-delay: 0.2s;">
-            <img src="/img/dojo.png" alt="Il nostro dojo" onerror="this.style.background='linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)'; this.style.height='350px'; this.alt='Foto del dojo';">
+            <img src="/img/dojo.png" alt="Dojo Ki-Aikido Prato - Sala pratica arti marziali giapponesi" onerror="this.style.background='linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)'; this.style.height='350px'; this.alt='Dojo Ki-Aikido Prato';">
         </div>
     </section>
 
@@ -486,6 +504,6 @@
     </div>
 </footer>
 
-<script src="/js/main.js"></script>
+<script src="/js/main.js" defer></script>
 </body>
 </html>

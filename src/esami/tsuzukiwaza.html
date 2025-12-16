@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tsuzukiwaza - Ki-Aikido Prato</title>
+    <title>Tsuzukiwaza - Ki Aikido Prato | Video Arti Marziali</title>
+    <meta name="description" content="Tsuzukiwaza Ki Aikido Prato: forme continuative arti marziali con bokken, jo e tanto. Video tecniche scuola Aikido Toscana affiliata Ki no Kenkyukai.">
+    <meta name="keywords" content="tsuzukiwaza aikido, video aikido prato, ki aikido prato, arti marziali prato, bokken jo tanto, scuola aikido toscana">
+    <link rel="canonical" href="https://www.kiaikidoprato.com/esami/tsuzukiwaza.html">
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <!-- Preconnect per Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Caricamento asincrono dei font (solo weights utilizzati) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap"></noscript>
     <style>
         :root {
             --ink-black: #1a1a1a;
@@ -194,51 +201,112 @@
             animation: fadeIn 1s ease-out 1.2s both;
         }
 
-        /* Exam Selector - Compact */
+        /* Exam Selector - Select Dropdown */
         .exam-selector {
             background: white;
-            border-radius: 4px;
-            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 10px var(--deep-shadow);
             animation: fadeIn 1s ease-out 1.4s both;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .exam-selector-label {
-            font-size: 0.8rem;
+            display: block;
+            font-size: 0.9rem;
             color: var(--stone-gray);
-            white-space: nowrap;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
         }
 
-        .exam-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            flex: 1;
+        .select-wrapper {
+            position: relative;
+            width: 100%;
         }
 
-        .exam-btn {
-            padding: 0.35rem 0.7rem;
-            border: none;
+        .exam-select {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.25rem;
+            border: 2px solid rgba(26, 26, 26, 0.1);
             background: var(--paper-cream);
             color: var(--ink-black);
             font-family: 'Zen Kaku Gothic New', sans-serif;
-            font-size: 0.75rem;
-            border-radius: 3px;
+            font-size: 1rem;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
 
-        .exam-btn:hover { background: var(--vermillion); color: white; }
-        .exam-btn.active { background: var(--vermillion); color: white; }
-        .exam-btn.dan { background: rgba(201, 169, 89, 0.2); }
-        .exam-btn.dan:hover, .exam-btn.dan.active { background: var(--gold-accent); color: var(--ink-black); }
+        .exam-select:hover {
+            border-color: var(--vermillion);
+            background: white;
+        }
 
-        .selected-exam-info { display: none; }
+        .exam-select:focus {
+            outline: none;
+            border-color: var(--vermillion);
+            box-shadow: 0 0 0 3px rgba(199, 62, 29, 0.1);
+        }
+
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--ink-black);
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        .select-wrapper:hover::after {
+            border-top-color: var(--vermillion);
+        }
+
+        .exam-select option {
+            padding: 0.75rem;
+            background: white;
+            color: var(--ink-black);
+        }
+
+        .exam-select option[data-type="dan"] {
+            background: rgba(201, 169, 89, 0.1);
+        }
+
+        .selected-exam-info {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(26, 26, 26, 0.1);
+            font-size: 0.9rem;
+            color: var(--stone-gray);
+            text-align: center;
+            display: none;
+        }
+
+        .selected-exam-info.visible {
+            display: block;
+        }
+
+        .selected-exam-name {
+            color: var(--ink-black);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .selected-exam-count {
+            color: var(--vermillion);
+            font-size: 0.85rem;
+        }
 
         /* Video grid */
         .video-grid {
@@ -550,13 +618,18 @@
                 grid-template-columns: 1fr;
             }
 
-            .exam-buttons {
-                gap: 0.4rem;
+
+            .exam-selector {
+                padding: 1.25rem;
             }
 
-            .exam-btn {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.8rem;
+            .exam-select {
+                padding: 0.875rem 2.5rem 0.875rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .select-wrapper::after {
+                right: 1rem;
             }
         }
     /* Footer */
@@ -605,14 +678,20 @@
         </p>
 
         <div class="exam-selector">
-            <span class="exam-selector-label">Filtra:</span>
-            <div class="exam-buttons">
-                <button class="exam-btn active" data-exam="all">Tutti</button>
-                <button class="exam-btn" data-exam="1kyu">1°Kyu</button>
-                <button class="exam-btn dan" data-exam="shodan">1°Dan</button>
-                <button class="exam-btn dan" data-exam="nidan">2°Dan</button>
-                <button class="exam-btn dan" data-exam="sandan">3°Dan</button>
-                <button class="exam-btn dan" data-exam="yondan">4°Dan</button>
+            <label class="exam-selector-label" for="examSelect">Seleziona il tuo esame:</label>
+            <div class="select-wrapper">
+                <select id="examSelect" class="exam-select">
+                    <option value="all" selected>Tutti i Tsuzukiwaza</option>
+                    <option value="1kyu">1° Kyu</option>
+                    <option value="shodan" data-type="dan">1° Dan (Shodan)</option>
+                    <option value="nidan" data-type="dan">2° Dan (Nidan)</option>
+                    <option value="sandan" data-type="dan">3° Dan (Sandan)</option>
+                    <option value="yondan" data-type="dan">4° Dan (Yondan)</option>
+                </select>
+            </div>
+            <div class="selected-exam-info" id="selectedExamInfo">
+                <div class="selected-exam-name" id="selectedExamName"></div>
+                <div class="selected-exam-count" id="selectedExamCount"></div>
             </div>
         </div>
 
@@ -699,8 +778,8 @@
             { num: 17, title: "Katadori Menuchi", file: "17 Katadori Menuci.mp4", size: "25 MB", exams: ['yondan'] },
             { num: 18, title: "Yokomenuchi", file: "18 Yokomenuchi.mp4", size: "20 MB", exams: ['sandan'] },
             { num: 19, title: "Tsuki", file: "19 Tzuki.mp4", size: "21 MB", exams: ['sandan'] },
-            { num: 21, title: "Tantodori 1", file: "21 Tsuzukiwaza n°21.mp4", size: "50 MB", exams: ['shodan'] },
-            { num: 22, title: "Tantodori 2", file: "22 Tsuzukiwaza n°22.mp4", size: "51 MB", exams: ['nidan'] },
+            { num: 21, title: "Tantodori 1", file: "21 Tsuzukiwaza n°21 Tantodori n°1.mp4", size: "50 MB", exams: ['shodan'] },
+            { num: 22, title: "Tantodori 2", file: "22 Tsuzukiwaza n°22 Tantodori n°2.mp4", size: "51 MB", exams: ['nidan'] },
             { num: 23, title: "Bokkendori", file: "23 Bokkendori.mp4", size: "42 MB", exams: ['nidan'] },
             { num: 24, title: "Jodori", file: "24 Jodori.mp4", size: "59 MB", exams: ['sandan'] },
             { num: 25, title: "Jo e Bokken 1", file: "25 Jo-Bokken 1.mp4", size: "16 MB", exams: ['shodan', 'sandan'], note: "Shodan: esaminato usa Jo / Sandan: esaminato usa Bokken" },
@@ -712,13 +791,10 @@
         ];
 
         const grid = document.getElementById('videoGrid');
-        const examInfo = document.getElementById('examInfo');
-        const examName = document.getElementById('examName');
-        const videoCount = document.getElementById('videoCount');
         const noResults = document.getElementById('noResults');
 
         // Generate all cards
-        videos.forEach((video, index) => {
+        videos.forEach((video) => {
             const card = document.createElement('article');
             card.className = 'video-card';
             card.dataset.video = video.file;
@@ -758,13 +834,16 @@
         });
 
         // Filter functionality
-        const examButtons = document.querySelectorAll('.exam-btn');
+        const examSelect = document.getElementById('examSelect');
+        const selectedExamInfo = document.getElementById('selectedExamInfo');
+        const selectedExamName = document.getElementById('selectedExamName');
+        const selectedExamCount = document.getElementById('selectedExamCount');
 
         function filterVideos(exam) {
             const cards = document.querySelectorAll('.video-card');
             let visibleCount = 0;
 
-            cards.forEach((card, index) => {
+            cards.forEach((card) => {
                 const cardExams = card.dataset.exams.split(',');
                 const shouldShow = exam === 'all' || cardExams.includes(exam);
 
@@ -781,13 +860,13 @@
 
             // Update info
             if (exam === 'all') {
-                examInfo.classList.remove('visible');
+                selectedExamInfo.classList.remove('visible');
                 noResults.classList.remove('visible');
             } else {
                 const examData = examRequirements[exam];
-                examName.textContent = `${examData.name} — ${examData.description}`;
-                videoCount.textContent = `${visibleCount} Tsuzukiwaza richiesti`;
-                examInfo.classList.add('visible');
+                selectedExamName.textContent = `${examData.name} — ${examData.description}`;
+                selectedExamCount.textContent = `${visibleCount} Tsuzukiwaza ${visibleCount === 1 ? 'richiesto' : 'richiesti'}`;
+                selectedExamInfo.classList.add('visible');
 
                 if (visibleCount === 0) {
                     noResults.classList.add('visible');
@@ -797,12 +876,8 @@
             }
         }
 
-        examButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                examButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                filterVideos(btn.dataset.exam);
-            });
+        examSelect.addEventListener('change', (e) => {
+            filterVideos(e.target.value);
         });
 
         // Modal functionality
@@ -847,7 +922,7 @@
             }
         });
     </script>
-    <script src="/js/main.js"></script>
+    <script src="/js/main.js" defer></script>
 
     <footer class="main-footer">
         <div class="footer-content">

@@ -7,33 +7,33 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://kiaikidoprato.com/chi-siamo.html</loc>
-        <lastmod>2024-12-15</lastmod>
+        <loc>https://www.kiaikidoprato.com/chi-siamo.html</loc>
+        <lastmod>2025-12-16</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://kiaikidoprato.com/esami/</loc>
-        <lastmod>2024-12-15</lastmod>
+        <loc>https://www.kiaikidoprato.com/esami/</loc>
+        <lastmod>2025-12-16</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://kiaikidoprato.com/esami/tsuzukiwaza.html</loc>
-        <lastmod>2024-12-15</lastmod>
+        <loc>https://www.kiaikidoprato.com/esami/tsuzukiwaza.html</loc>
+        <lastmod>2025-12-16</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://kiaikidoprato.com/ranking.html</loc>
-        <lastmod>2024-12-15</lastmod>
+        <loc>https://www.kiaikidoprato.com/ranking.html</loc>
+        <lastmod>2025-12-16</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://kiaikidoprato.com/contatti.html</loc>
-        <lastmod>2024-12-15</lastmod>
+        <loc>https://www.kiaikidoprato.com/contatti.html</loc>
+        <lastmod>2025-12-16</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.9</priority>
     </url>
 </urlset>

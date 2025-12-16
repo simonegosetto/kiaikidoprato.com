@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://kiaikidoprato.com/sitemap.xml
+Sitemap: https://www.kiaikidoprato.com/sitemap.xml
 
 # Disallow admin or private areas (if any)
 Disallow: /admin/

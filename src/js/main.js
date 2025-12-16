@@ -298,7 +298,7 @@ function initRanking() {
                 ${members.map(member => `
                     <div class="member-card">
                         <div class="member-photo">
-                            <img src="/img/ranking/${member.photo}" alt="${member.name}" loading="lazy" class="${member.photoPosition ? 'photo-' + member.photoPosition : ''}" onerror="this.parentElement.innerHTML='<span class=\\'member-photo-placeholder\\'>${member.name.split(' ').map(n => n[0]).join('')}</span>'">
+                            <img src="/img/ranking/${member.photo}" alt="${member.name} - ${member.grade} Ki-Aikido Prato" loading="lazy" class="${member.photoPosition ? 'photo-' + member.photoPosition : ''}" onerror="this.parentElement.innerHTML='<span class=\\'member-photo-placeholder\\'>${member.name.split(' ').map(n => n[0]).join('')}</span>'">
                         </div>
                         <div class="member-info">
                             <div class="member-name">${member.name}</div>
