@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatti - Ki-Aikido Prato</title>
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .contact-intro { max-width: 600px; margin: 0 auto 3rem; text-align: center; color: var(--stone-gray); font-size: 1.05rem; line-height: 1.8; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 4rem; }
+        .contact-form-section { background: var(--white); padding: 2.5rem; border-radius: 4px; box-shadow: 0 4px 20px var(--deep-shadow); }
+        .contact-form-section h2 { font-size: 1.5rem; font-weight: 500; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--vermillion); }
+        .contact-info-section { display: flex; flex-direction: column; gap: 1.5rem; }
+        .contact-card { background: var(--white); padding: 1.5rem; border-radius: 4px; box-shadow: 0 4px 20px var(--deep-shadow); }
+        .contact-card h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem; color: var(--vermillion); display: flex; align-items: center; gap: 0.75rem; }
+        .contact-card h3 svg { width: 22px; height: 22px; stroke: var(--vermillion); fill: none; stroke-width: 2; }
+        .contact-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(26, 26, 26, 0.06); }
+        .contact-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .contact-item-icon { width: 40px; height: 40px; background: var(--paper-cream); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .contact-item-icon svg { width: 18px; height: 18px; stroke: var(--ink-black); fill: none; stroke-width: 2; }
+        .contact-item-content h4 { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .contact-item-content p, .contact-item-content a { font-size: 0.95rem; color: var(--stone-gray); }
+        .schedule-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(26, 26, 26, 0.06); font-size: 0.9rem; }
+        .schedule-row:last-child { border-bottom: none; }
+        .schedule-day { font-weight: 500; }
+        .schedule-time { color: var(--stone-gray); }
+        .form-note { font-size: 0.85rem; color: var(--stone-gray); margin-top: 1rem; text-align: center; }
+        .sedi-section { margin-bottom: 4rem; }
+        .sedi-section h2 { font-size: 1.5rem; font-weight: 500; text-align: center; margin-bottom: 2rem; }
+        .sedi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        .sede-card { background: var(--white); border-radius: 4px; overflow: hidden; box-shadow: 0 4px 20px var(--deep-shadow); }
+        .sede-map { width: 100%; height: 220px; border: none; }
+        .sede-info { padding: 1.5rem; }
+        .sede-info h3 { font-size: 1.15rem; font-weight: 500; margin-bottom: 0.75rem; color: var(--vermillion); }
+        .sede-info p { color: var(--stone-gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem; }
+        .sede-info .orari { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(26,26,26,0.08); }
+        .sede-info .orari strong { color: var(--ink-black); font-size: 0.85rem; }
+        @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } .sedi-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-enso"><svg viewBox="0 0 100 100"><circle class="enso-circle" cx="50" cy="50" r="40" /></svg></div>
+            <span class="nav-logo-text">Ki-Aikido Prato</span>
+        </a>
+        <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="/esami/">Esami</a></li>
+            <li><a href="/ranking.html">Ranking</a></li>
+            <li><a href="/contatti.html" class="active">Contatti</a></li>
+        </ul>
+    </nav>
+    <header class="page-header">
+        <div class="enso"><svg viewBox="0 0 100 100"><circle class="enso-circle" cx="50" cy="50" r="40" /></svg></div>
+        <h1>連絡</h1>
+        <p class="subtitle">Contatti</p>
+        <div class="divider"></div>
+    </header>
+    <main>
+        <p class="contact-intro fade-in">Vuoi iniziare a praticare Ki-Aikido? Contattaci per una lezione di prova gratuita.</p>
+        <section class="sedi-section">
+            <h2>Le Nostre Sedi</h2>
+            <div class="sedi-grid">
+                <div class="sede-card">
+                    <iframe class="sede-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2876.7383278063!2d11.116764111989822!3d43.86125203882886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132af7d47ff9f78d%3A0xd08e0bf9474c7c9f!2sDojo%20Shiro%20Saigo%20Arti%20Marziali%20Prato!5e0!3m2!1sit!2sit!4v1765915216401!5m2!1sit!2sit"  allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="sede-info">
+                        <h3>Palestra Shiro Saigo</h3>
+                        <p>Viale Guglielmo Marconi, 36<br>59100 Prato (PO)</p>
+                        <a href="https://maps.google.com/?q=Dojo+Shiro+Saigo+Arti+Marziali+Prato,Viale+Guglielmo+Marconi+36+Prato"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn-outline"
+                           style="width: 100%; margin: 0.75rem 0; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.5rem;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width: 16px; height: 16px; stroke: currentColor;">
+                                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            Apri in Google Maps
+                        </a>
+                        <div class="orari"><strong>Orari:</strong><p>Martedi e Giovedi: 21:30 - 23:00</p></div>
+                    </div>
+                </div>
+                <div class="sede-card">
+                    <iframe class="sede-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5750.763778112494!2d11.085518353964597!3d43.88935676282553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132af667055c22f3%3A0x8d13cde869f85c14!2sPalagym!5e0!3m2!1sit!2sit!4v1765915157875!5m2!1sit!2sit" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="sede-info">
+                        <h3>Palestra Palagym</h3>
+                        <p>Via Renzo Gori, 15<br>59100 Prato (PO)</p>
+                        <a href="https://maps.google.com/?q=Palagym,Via+Renzo+Gori+15+Prato"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn-outline"
+                           style="width: 100%; margin: 0.75rem 0; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.5rem;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width: 16px; height: 16px; stroke: currentColor;">
+                                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            Apri in Google Maps
+                        </a>
+                        <div class="orari"><strong>Orari:</strong><p>Martedi e Giovedi: 20:30 - 22:30</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="contact-grid">
+            <div class="contact-form-section">
+                <h2>Scrivici</h2>
+                <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <div class="form-group"><label class="form-label" for="name">Nome *</label><input type="text" id="name" name="name" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label" for="email">Email *</label><input type="email" id="email" name="email" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label" for="phone">Telefono</label><input type="tel" id="phone" name="phone" class="form-input"></div>
+                    <div class="form-group"><label class="form-label" for="message">Messaggio *</label><textarea id="message" name="message" class="form-textarea" required></textarea></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%">Invia</button>
+                </form>
+            </div>
+            <div class="contact-info-section">
+                <div class="contact-card">
+                    <h3><svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Contatti</h3>
+                    <div class="contact-item">
+                        <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                        <div class="contact-item-content"><h4>Email</h4><a href="mailto:info@kiaikidoprato.com">info@kiaikidoprato.com</a></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+                        <div class="contact-item-content"><h4>Telefono</h4><a href="tel:+393356909025">335 690 9025</a></div>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <h3><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Orari</h3>
+                    <div class="schedule-row"><span class="schedule-day">Shiro Saigo</span><span class="schedule-time">Mar/Gio 21:30-23:00</span></div>
+                    <div class="schedule-row"><span class="schedule-day">Palagym</span><span class="schedule-time">Mar/Gio 20:30-22:30</span></div>
+                </div>
+            </div>
+        </div>
+    </main>
+        <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Ki-Aikido Prato</h4>
+                <p>Scuola affiliata alla Ki no Kenkyukai Internationale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul class="footer-nav">
+                    <li><a href="/esami/">Programma Esami</a></li>
+                    <li><a href="/ranking.html">Ranking</a></li>
+                    <li><a href="/contatti.html">Contatti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contatti</h4>
+                <p><a href="mailto:info@kiaikidoprato.com">info@kiaikidoprato.com</a><br>Tel: <a href="tel:+393356909025">335 690 9025</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+    <script src="/js/main.js"></script>
+</body>
+</html>

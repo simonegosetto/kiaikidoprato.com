@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programma Esami - Ki-Aikido Prato</title>
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Compact Exam Navigator */
+        .quick-nav {
+            background: white;
+            border-radius: 4px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px var(--deep-shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .quick-nav-label { font-size: 0.8rem; color: var(--stone-gray); white-space: nowrap; }
+        .quick-nav-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; }
+        .quick-nav-btn {
+            padding: 0.3rem 0.6rem;
+            border: none;
+            background: var(--paper-cream);
+            color: var(--ink-black);
+            font-size: 0.75rem;
+            border-radius: 3px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .quick-nav-btn:hover { background: var(--vermillion); color: white; }
+        .quick-nav-btn.dan { background: rgba(201, 169, 89, 0.2); }
+        .quick-nav-btn.dan:hover { background: var(--gold-accent); color: var(--ink-black); }
+        .quick-nav-divider { width: 1px; height: 20px; background: rgba(26,26,26,0.15); }
+        .quick-nav-video {
+            padding: 0.3rem 0.8rem;
+            background: var(--vermillion);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 3px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .quick-nav-video:hover { background: #a83218; }
+        @media (max-width: 768px) {
+            .quick-nav { padding: 0.75rem 1rem; }
+            .quick-nav-label { width: 100%; margin-bottom: 0.25rem; }
+            .quick-nav-divider { display: none; }
+        }
+        .exam-section { margin-bottom: 4rem; scroll-margin-top: 80px; }
+        .exam-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--vermillion); }
+        .exam-header.dan { border-bottom-color: var(--gold-accent); }
+        .exam-level { font-family: 'Noto Serif JP', serif; font-size: 2.5rem; font-weight: 700; color: var(--vermillion); line-height: 1; }
+        .exam-header.dan .exam-level { color: var(--gold-accent); }
+        .exam-title-group { flex: 1; }
+        .exam-title { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .exam-requirement { font-size: 0.9rem; color: var(--stone-gray); }
+        .exam-kanji { font-family: 'Noto Serif JP', serif; font-size: 2rem; color: rgba(26, 26, 26, 0.1); font-weight: 700; }
+        .exam-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .exam-table { background: white; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 20px var(--deep-shadow); }
+        .table-header { background: var(--ink-black); color: white; padding: 1rem 1.25rem; font-family: 'Noto Serif JP', serif; font-size: 1rem; font-weight: 500; }
+        .table-header.vermillion { background: var(--vermillion); }
+        .table-header.gold { background: var(--gold-accent); color: var(--ink-black); }
+        .table-row { padding: 0.75rem 1.25rem; border-bottom: 1px solid rgba(26, 26, 26, 0.08); font-size: 0.9rem; transition: background 0.2s ease; }
+        .table-row:last-child { border-bottom: none; }
+        .table-row:hover { background: var(--light-cream); }
+        .table-row.has-video { cursor: pointer; position: relative; padding-right: 2.5rem; }
+        .table-row.has-video::after { content: '▶'; position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%); font-size: 0.7rem; color: var(--vermillion); opacity: 0; transition: opacity 0.2s ease; }
+        .table-row.has-video:hover::after { opacity: 1; }
+        .table-row.has-video:hover { background: rgba(199, 62, 29, 0.05); }
+        .ki-test-row { display: grid; grid-template-columns: 2rem 1fr; gap: 0.5rem; padding: 0.75rem 1.25rem; border-bottom: 1px solid rgba(26, 26, 26, 0.08); font-size: 0.85rem; }
+        .ki-test-row:last-child { border-bottom: none; }
+        .ki-test-num { font-weight: 500; color: var(--vermillion); }
+        .ki-test-row:hover { background: var(--light-cream); }
+        .ki-test-position { color: var(--ink-black); }
+        .ki-test-test { color: var(--stone-gray); font-size: 0.8rem; margin-top: 0.25rem; }
+        .exam-notes { background: rgba(201, 169, 89, 0.1); border-left: 3px solid var(--gold-accent); padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--stone-gray); margin-top: 1.5rem; border-radius: 0 4px 4px 0; }
+        .exam-notes strong { color: var(--ink-black); }
+        .video-section { margin-top: 1.5rem; padding: 1.25rem; background: white; border-radius: 4px; box-shadow: 0 4px 20px var(--deep-shadow); }
+        .video-section-title { font-family: 'Noto Serif JP', serif; font-size: 1rem; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .video-section-title svg { width: 20px; height: 20px; fill: var(--vermillion); }
+        .video-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .video-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; background: var(--paper-cream); border: 1px solid rgba(26, 26, 26, 0.1); border-radius: 2px; font-size: 0.85rem; color: var(--ink-black); text-decoration: none; transition: all 0.3s ease; cursor: pointer; }
+        .video-link:hover { border-color: var(--vermillion); color: var(--vermillion); background: white; }
+        .video-link svg { width: 14px; height: 14px; fill: currentColor; }
+        @media (max-width: 768px) { .exam-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; } .exam-kanji { display: none; } .exam-content { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-enso"><svg viewBox="0 0 100 100"><circle class="enso-circle" cx="50" cy="50" r="40" /></svg></div>
+            <span class="nav-logo-text">Ki-Aikido Prato</span>
+        </a>
+        <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="/esami/" class="active">Esami</a></li>
+            <li><a href="/ranking.html">Ranking</a></li>
+            <li><a href="/contatti.html">Contatti</a></li>
+        </ul>
+    </nav>
+
+    <header class="page-header">
+        <div class="enso"><svg viewBox="0 0 100 100"><circle class="enso-circle" cx="50" cy="50" r="40" /></svg></div>
+        <h1>試験</h1>
+        <p class="subtitle">Programma Esami</p>
+        <div class="divider"></div>
+    </header>
+
+    <main>
+        <div class="quick-nav">
+            <span class="quick-nav-label">Vai a:</span>
+            <div class="quick-nav-pills">
+                <a href="#shokyu" class="quick-nav-btn">Shokyu</a>
+                <a href="#5kyu" class="quick-nav-btn">5°</a>
+                <a href="#4kyu" class="quick-nav-btn">4°</a>
+                <a href="#chukyu" class="quick-nav-btn">Chukyu</a>
+                <a href="#3kyu" class="quick-nav-btn">3°</a>
+                <a href="#2kyu" class="quick-nav-btn">2°</a>
+                <a href="#jokyu" class="quick-nav-btn">Jokyu</a>
+                <a href="#1kyu" class="quick-nav-btn">1°</a>
+                <a href="#shoden" class="quick-nav-btn dan">Shoden</a>
+                <a href="#shodan" class="quick-nav-btn dan">1°Dan</a>
+                <a href="#chuden" class="quick-nav-btn dan">Chuden</a>
+                <a href="#nidan" class="quick-nav-btn dan">2°Dan</a>
+                <a href="#joden" class="quick-nav-btn dan">Joden</a>
+                <a href="#sandan" class="quick-nav-btn dan">3°Dan</a>
+                <a href="#okuden" class="quick-nav-btn dan">Okuden</a>
+                <a href="#yondan" class="quick-nav-btn dan">4°Dan</a>
+            </div>
+            <span class="quick-nav-divider"></span>
+            <a href="/esami/tsuzukiwaza.html" class="quick-nav-video">▶ Video</a>
+        </div>
+
+        <!-- SHOKYU -->
+        <section class="exam-section" id="shokyu">
+            <div class="exam-header">
+                <span class="exam-level">初</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Shokyu — 1° Grado di Ki</h2>
+                    <p class="exam-requirement">Almeno 14 anni d'età • Minimo 4 mesi di pratica</p>
+                </div>
+                <span class="exam-kanji">初級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Test di Ki</div>
+                    <div class="table-content">
+                        <div class="ki-test-row"><span class="ki-test-num">1.</span><div><div class="ki-test-position">In piedi a braccia alzate</div><div class="ki-test-test">Test al polso verso il basso</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">2.</span><div><div class="ki-test-position">In piedi, abbassare le braccia</div><div class="ki-test-test">Test al polso verso l'alto e il basso</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">3.</span><div><div class="ki-test-position">Seiza, alzare le braccia</div><div class="ki-test-test">Test al polso verso il basso</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">4.</span><div><div class="ki-test-position">Seiza, mani sulle gambe</div><div class="ki-test-test">Test al polso e alle ginocchia verso l'alto</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">5.</span><div><div class="ki-test-position">Agura, alzare le braccia</div><div class="ki-test-test">Test al polso verso il basso</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">6.</span><div><div class="ki-test-position">Agura, mani sulle gambe</div><div class="ki-test-test">Test al polso e alle ginocchia verso l'alto</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">7.</span><div><div class="ki-test-position">In piedi, piede avanti, braccio disteso, palmo verso il basso</div><div class="ki-test-test">Test verso l'alto sull'avambraccio</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">8.</span><div><div class="ki-test-position">Kokyu-Ho (respirazione Ki)</div><div class="ki-test-test">—</div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="exam-notes"><strong>Note:</strong> L'esaminato può salire e scendere sulla punta dei piedi. Non sono richiesti gli esercizi di Kenko Taiso.</div>
+        </section>
+
+        <!-- 5° KYU -->
+        <section class="exam-section" id="5kyu">
+            <div class="exam-header">
+                <span class="exam-level">5</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">5° Kyu</h2>
+                    <p class="exam-requirement">Minimo 4 mesi di pratica dopo Shokyu</p>
+                </div>
+                <span class="exam-kanji">五級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Hitori Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Udefuri undo</div>
+                        <div class="table-row">Udefuri choyaku undo</div>
+                        <div class="table-row">Tenshin undo</div>
+                        <div class="table-row">Sayu undo</div>
+                        <div class="table-row">Sayu choyaku undo</div>
+                        <div class="table-row">3 Ushiro Ukemi</div>
+                        <div class="table-row">Shikko (4 avanti)</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header vermillion">Kumi Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Katate Kosadori Kokyunage</div>
+                        <div class="table-row">Katatedori Ryotemochi Kokyunage</div>
+                        <div class="table-row">Katatedori Tenshin Kokyunage</div>
+                        <div class="table-row">Katatedori Ryotemochi Tenshin Kokyunage Udemawashi</div>
+                        <div class="table-row">Zagi Ryotedori Kokyunage</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header">Kenko Taiso</div>
+                    <div class="table-content">
+                        <div class="table-row">Eseguire col Jo i seguenti esercizi: 1-2-4-6-8</div>
+                    </div>
+                </div>
+            </div>
+            <div class="video-section">
+                <p class="video-section-title"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Video disponibili</p>
+                <div class="video-links">
+                    <span class="video-link" data-video="5°kyu Hitori Waza.mp4" data-title="5° Kyu - Hitori Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Hitori Waza</span>
+                    <span class="video-link" data-video="5°Kyu Kumi Waza.mp4" data-title="5° Kyu - Kumi Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Kumi Waza</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4° KYU -->
+        <section class="exam-section" id="4kyu">
+            <div class="exam-header">
+                <span class="exam-level">4</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">4° Kyu</h2>
+                    <p class="exam-requirement">Minimo 4 mesi di pratica dopo 5° Kyu</p>
+                </div>
+                <span class="exam-kanji">四級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Hitori Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Funakogi undo</div>
+                        <div class="table-row">Ikkyo undo</div>
+                        <div class="table-row">Tenshin undo</div>
+                        <div class="table-row">Zengo undo</div>
+                        <div class="table-row">Happo undo</div>
+                        <div class="table-row">3 Mae Ukemi e 3 Ushiro Ukemi dx e sx</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header vermillion">Kumi Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Katatedori Ikkyo Irimi</div>
+                        <div class="table-row">Munetsuki Ikkyo Irimi</div>
+                        <div class="table-row">Munetsuki Koteoroshi</div>
+                        <div class="table-row">Katatedori Ryotemochi Koteoroshi (en Undo)</div>
+                        <div class="table-row">Ushiro Ryotedori Zemponage (o Tembinage)</div>
+                        <div class="table-row">Ushirokubishime Kokyunage Uragaeshi</div>
+                        <div class="table-row">Ushiro Ryotedori Ikkyo</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header">Jo Aiki Taiso</div>
+                    <div class="table-content">
+                        <div class="table-row">Funekogi undo</div>
+                        <div class="table-row">Ikkyo undo</div>
+                        <div class="table-row">Tenshin undo</div>
+                        <div class="table-row">Zengo undo</div>
+                        <div class="table-row">Happo undo</div>
+                    </div>
+                </div>
+            </div>
+            <div class="video-section">
+                <p class="video-section-title"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Video disponibili</p>
+                <div class="video-links">
+                    <span class="video-link" data-video="4°Kyu Hitori Waza.mp4" data-title="4° Kyu - Hitori Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Hitori Waza</span>
+                    <span class="video-link" data-video="4°Kyu Kumi Waza.mp4" data-title="4° Kyu - Kumi Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Kumi Waza</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHUKYU -->
+        <section class="exam-section" id="chukyu">
+            <div class="exam-header">
+                <span class="exam-level">中</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Chukyu — 2° Grado di Ki</h2>
+                    <p class="exam-requirement">Minimo 6 mesi di pratica dopo 4° Kyu</p>
+                </div>
+                <span class="exam-kanji">中級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Test di Ki</div>
+                    <div class="table-content">
+                        <div class="table-row">Come Shokyu ad eccezione del punto 7, in cui il test si esegue al polso</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header">Kenko Taiso</div>
+                    <div class="table-content">
+                        <div class="table-row">Tutti gli esercizi di Kenko Taiso</div>
+                    </div>
+                </div>
+            </div>
+            <div class="exam-notes"><strong>Note:</strong> Non serve fare i test a braccia sollevate.</div>
+        </section>
+
+        <!-- 3° KYU -->
+        <section class="exam-section" id="3kyu">
+            <div class="exam-header">
+                <span class="exam-level">3</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">3° Kyu</h2>
+                    <p class="exam-requirement">Minimo 6 mesi di pratica dopo Chukyu</p>
+                </div>
+                <span class="exam-kanji">三級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Hitori Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Koteoroshi undo</div>
+                        <div class="table-row">Sankyo undo</div>
+                        <div class="table-row">Nikyo undo</div>
+                        <div class="table-row">Tekubikosa undo</div>
+                        <div class="table-row">Hanmi-Gyakuhanmi undo</div>
+                        <div class="table-row">Ushirotori undo</div>
+                        <div class="table-row">Ushiro Tekubitori Zenshin e Koshin undo</div>
+                        <div class="table-row">Shikko (4 avanti e 4 indietro)</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header vermillion">Kumi Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Katatedori Kokyunage Irimi</div>
+                        <div class="table-row">Katatedori Kokyunage Tenshin (liberandosi dalla presa)</div>
+                        <div class="table-row">Yokomenuchi Kokyunage</div>
+                        <div class="table-row">Katatedori Shihonage (I-T)</div>
+                        <div class="table-row">Yokomenuchi Shihonage (I-I, I-T, T-I, T-T)</div>
+                        <div class="table-row">Ryotedori Zemponage</div>
+                        <div class="table-row">Ushirodori Zemponage</div>
+                        <div class="table-row">Tantodori: Tsuki Koteoroshi</div>
+                        <div class="table-row">Bokendori: Shomenuchi Kokyunage</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header">Jo e Jo Aiki Taiso</div>
+                    <div class="table-content">
+                        <div class="table-row">Shomenuchi</div>
+                        <div class="table-row">Yokomenuchi</div>
+                        <div class="table-row">Yokobarai</div>
+                        <div class="table-row">Douchi</div>
+                        <div class="table-row">Ashiuchi</div>
+                    </div>
+                </div>
+            </div>
+            <div class="video-section">
+                <p class="video-section-title"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Video disponibili</p>
+                <div class="video-links">
+                    <span class="video-link" data-video="3°Kyu Hitori Waza.mp4" data-title="3° Kyu - Hitori Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Hitori Waza</span>
+                    <span class="video-link" data-video="3°kyu Kumi Waza.mp4" data-title="3° Kyu - Kumi Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Kumi Waza</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2° KYU -->
+        <section class="exam-section" id="2kyu">
+            <div class="exam-header">
+                <span class="exam-level">2</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">2° Kyu</h2>
+                    <p class="exam-requirement">Minimo 6 mesi di pratica dopo 3° Kyu</p>
+                </div>
+                <span class="exam-kanji">二級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Hitori Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Shikko: 8 passi avanti, 8 passi indietro, 4 Tenshin undo</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header vermillion">Kumi Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Zagi: Shomenuchi Ikkyo (Irimi/Tenshin)</div>
+                        <div class="table-row">Katadori Ikkyo (Irimi)</div>
+                        <div class="table-row">Katadori Nikyo (Irimi)</div>
+                        <div class="table-row">Katadori Sankyo (Irimi)</div>
+                        <div class="table-row">Katadori Yonkyo (Irimi)</div>
+                        <div class="table-row">Yokomenuchi Kokyunage Irimi</div>
+                        <div class="table-row">Shomenuchi Ikkyo (Irimi/Tenshin)</div>
+                        <div class="table-row">Ushiro Ryokatadori Kokyunage</div>
+                        <div class="table-row">Ushiro Ryokatadori Zemponage</div>
+                        <div class="table-row">Jodori: Tsukikaeshi</div>
+                        <div class="table-row">Jodori: Munetsuki Zemponage</div>
+                        <div class="table-row">Hitorigake (attacco da un uke)</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header">Bokken Aiki Taiso</div>
+                    <div class="table-content">
+                        <div class="table-row">Muovere il boken verticalmente sopra la spalla 4x dx e sx</div>
+                        <div class="table-row">Shomenuchi, 4 a dx e 4 a sx</div>
+                        <div class="table-row">Muovere il boken orizzontalmente all'altezza del petto</div>
+                        <div class="table-row">Tagliare orizzontalmente 4 volte a dx e 4 a sx</div>
+                    </div>
+                </div>
+            </div>
+            <div class="video-section">
+                <p class="video-section-title"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Video disponibili</p>
+                <div class="video-links">
+                    <span class="video-link" data-video="2°Kyu HitoriWaza.mp4" data-title="2° Kyu - Hitori Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Hitori Waza</span>
+                    <span class="video-link" data-video="2°kyu Kumi Waza.mp4" data-title="2° Kyu - Kumi Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Kumi Waza</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- JOKYU -->
+        <section class="exam-section" id="jokyu">
+            <div class="exam-header">
+                <span class="exam-level">上</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Jokyu — 3° Grado di Ki</h2>
+                    <p class="exam-requirement">Minimo 8 mesi di pratica dopo 2° Kyu</p>
+                </div>
+                <span class="exam-kanji">上級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table" style="grid-column: 1 / -1;">
+                    <div class="table-header">Test di Ki</div>
+                    <div class="table-content">
+                        <div class="ki-test-row"><span class="ki-test-num">1.</span><div><div class="ki-test-position">In piedi, braccia lungo il corpo</div><div class="ki-test-test">Test al polso verso l'alto e verso il basso</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">2.</span><div><div class="ki-test-position">Seiza, mani sulle gambe</div><div class="ki-test-test">Test al polso verso l'alto e sotto al ginocchio</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">3.</span><div><div class="ki-test-position">Agura, mani sulle gambe</div><div class="ki-test-test">Test al polso verso l'alto e sotto al ginocchio</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">4.</span><div><div class="ki-test-position">In piedi, piede avanti, braccio disteso</div><div class="ki-test-test">Test verso l'alto sulla mano</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">8.</span><div><div class="ki-test-position">Piede avanti</div><div class="ki-test-test">Test laterale alla spalla</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">9.</span><div><div class="ki-test-position">Piede avanti, braccio disteso</div><div class="ki-test-test">Test al polso, tirare</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">10.</span><div><div class="ki-test-position">Appoggiarsi al compagno di schiena (muro)</div><div class="ki-test-test">Test alla spalla avanti</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">11.</span><div><div class="ki-test-position">Appoggiarsi al compagno in avanti (balcone)</div><div class="ki-test-test">Test al polso in alto e in basso</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">12.</span><div><div class="ki-test-position">Su un solo piede, braccio disteso</div><div class="ki-test-test">Test al polso, spingere</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">13.</span><div><div class="ki-test-position">Scendere in seiza e alzarsi in piedi</div><div class="ki-test-test">Test davanti e dietro</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">14.</span><div><div class="ki-test-position">Kokyu-Ho Respirazione Ki</div><div class="ki-test-test">Test se necessario</div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="exam-notes"><strong>Note:</strong> A differenza degli esami precedenti i test vanno fatti direttamente con le braccia giù in posizione naturale.</div>
+        </section>
+
+        <!-- 1° KYU -->
+        <section class="exam-section" id="1kyu">
+            <div class="exam-header">
+                <span class="exam-level">1</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">1° Kyu</h2>
+                    <p class="exam-requirement">Minimo 8 mesi di pratica dopo Jokyu</p>
+                </div>
+                <span class="exam-kanji">一級</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header">Hitori Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">1° Tsuzukiwaza di Jo da solo</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header vermillion">Kumi Waza</div>
+                    <div class="table-content">
+                        <div class="table-row has-video" data-video="14 Ryotedori (suwari).mp4" data-title="14° Tsuzukiwaza - Suwariwaza" data-base-url="/video/">14° Tsuzukiwaza (Suwariwaza)</div>
+                        <div class="table-row has-video" data-video="16 Handachi.mp4" data-title="16° Tsuzukiwaza - Handachi" data-base-url="/video/">16° Tsuzukiwaza (Handachi)</div>
+                        <div class="table-row has-video" data-video="1 Katatedori tenkan.mp4" data-title="1° Tsuzukiwaza - Katatedori" data-base-url="/video/">1° Tsuzukiwaza (Katatedori) o 7 tecniche libere</div>
+                        <div class="table-row has-video" data-video="3 Ryotemochi.mp4" data-title="3° Tsuzukiwaza - Katatedori Ryotemochi" data-base-url="/video/">3° Tsuzukiwaza (Katatedori Ryotemochi) o 7 tecniche libere</div>
+                        <div class="table-row">Niningake (attacco da due uke)</div>
+                    </div>
+                </div>
+                <div class="exam-table">
+                    <div class="table-header">Bokken Waza</div>
+                    <div class="table-content">
+                        <div class="table-row">Oscillare su e giù il boken tenuto lateralmente</div>
+                        <div class="table-row">Shomenuchi con 2 mani</div>
+                        <div class="table-row">Shomenuchi Tenshin facendo un passo avanti</div>
+                        <div class="table-row">Tsuki 8 passi avanti 8 indietro alternando hanmi</div>
+                        <div class="table-row">Happogiri (contare da 1 a 12 da solo)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="video-section">
+                <p class="video-section-title"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Video disponibili</p>
+                <div class="video-links">
+                    <span class="video-link" data-video="1° Kyu Hitori Waza.mp4" data-title="1° Kyu - Hitori Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Hitori Waza</span>
+                    <span class="video-link" data-video="1°Kyu Kumi Waza.mp4" data-title="1° Kyu - Kumi Waza" data-base-url="/video/kyu/"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Kumi Waza</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHODEN -->
+        <section class="exam-section" id="shoden">
+            <div class="exam-header dan">
+                <span class="exam-level">伝</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Shoden — 4° Grado di Ki</h2>
+                    <p class="exam-requirement">Minimo 1 anno di pratica dopo 1° Kyu</p>
+                </div>
+                <span class="exam-kanji">初伝</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table" style="grid-column: 1 / -1;">
+                    <div class="table-header gold">Kenko Taiso — Test di Ki</div>
+                    <div class="table-content">
+                        <div class="ki-test-row"><span class="ki-test-num">1.</span><div><div class="ki-test-position">In piedi, alzare le braccia</div><div class="ki-test-test">Test al gomito lateralmente</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">2.</span><div><div class="ki-test-position">In piedi, abbassare le braccia</div><div class="ki-test-test">Test alla spalla e al gomito lateralmente</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">3.</span><div><div class="ki-test-position">Seiza</div><div class="ki-test-test">Test spalla polso e ginocchio</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">4.</span><div><div class="ki-test-position">Agura</div><div class="ki-test-test">Test spalla polso e ginocchio</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">5.</span><div><div class="ki-test-position">Piede avanti, braccio disteso</div><div class="ki-test-test">Test alle dita verso l'alto</div></div></div>
+                        <div class="ki-test-row"><span class="ki-test-num">6-16.</span><div><div class="ki-test-position">Test completi come da programma Shoden</div><div class="ki-test-test">Inclusi: muro, balcone, corpo insollevabile, ushirotori, kokyu-ho</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHODAN -->
+        <section class="exam-section" id="shodan">
+            <div class="exam-header dan">
+                <span class="exam-level">初</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Shodan — 1° Dan</h2>
+                    <p class="exam-requirement">Minimo 1 anno di pratica dopo Shoden</p>
+                </div>
+                <span class="exam-kanji">初段</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table" style="grid-column: 1 / -1;">
+                    <div class="table-header gold">Tsuzukiwaza</div>
+                    <div class="table-content">
+                        <div class="table-row has-video" data-video="11 Katatedori irimi.mp4" data-title="11° Tsuzukiwaza - Katatedori" data-base-url="/video/">11° Tsuzukiwaza (Katatedori) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="13 Ryotemochi.mp4" data-title="13° Tsuzukiwaza - Katatedori Ryotemochi" data-base-url="/video/">13° Tsuzukiwaza (Katatedori Ryotemochi) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="2 Ushiro katatetori.mp4" data-title="2° Tsuzukiwaza - Ushiro Katatedori" data-base-url="/video/">2° Tsuzukiwaza (Ushiro Katatedori) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="8 Yokomunuchi.mp4" data-title="8° Tsuzukiwaza - Yokomenuchi" data-base-url="/video/">8° Tsuzukiwaza (Yokomenuchi) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="21 Tsuzukiwaza n°21.mp4" data-title="21° Tsuzukiwaza - Tantodori 1" data-base-url="/video/">21° Tsuzukiwaza (Tantodori 1) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="25 Jo-Bokken 1.mp4" data-title="25° Tsuzukiwaza - Jo e Bokken 1" data-base-url="/video/">25° Tsuzukiwaza (Jo e Boken 1) — l'esaminato usa il Jo</div>
+                        <div class="table-row has-video" data-video="27 Happogiri.mp4" data-title="27° Tsuzukiwaza - Happogiri" data-base-url="/video/">27° Tsuzukiwaza (Happogiri) con compagno</div>
+                        <div class="table-row">Sanningake</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHUDEN -->
+        <section class="exam-section" id="chuden">
+            <div class="exam-header dan">
+                <span class="exam-level">中</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Chuden — 5° Grado di Ki</h2>
+                    <p class="exam-requirement">Minimo 2 anni di pratica dopo Shodan</p>
+                </div>
+                <span class="exam-kanji">中伝</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header gold">Test di Ki</div>
+                    <div class="table-content">
+                        <div class="table-row">Come Shoden meno il punto 1</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NIDAN -->
+        <section class="exam-section" id="nidan">
+            <div class="exam-header dan">
+                <span class="exam-level">弐</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Nidan — 2° Dan</h2>
+                    <p class="exam-requirement">Minimo 2 anni di pratica dopo Chuden</p>
+                </div>
+                <span class="exam-kanji">弐段</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table" style="grid-column: 1 / -1;">
+                    <div class="table-header gold">Tsuzukiwaza</div>
+                    <div class="table-content">
+                        <div class="table-row has-video" data-video="4 Ryotedori.mp4" data-title="4° Tsuzukiwaza - Ryotedori" data-base-url="/video/">4° Tsuzukiwaza (Ryotedori) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="7 Shomenuchi.mp4" data-title="7° Tsuzukiwaza - Shomenuchi" data-base-url="/video/">7° Tsuzukiwaza (Shomenuchi) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="6 Ushirotori.mp4" data-title="6° Tsuzukiwaza - Ushirotori" data-base-url="/video/">6° Tsuzukiwaza (Ushirotori) o tecniche libere</div>
+                        <div class="table-row has-video" data-video="15 UshiroRyoKatadori.mp4" data-title="15° Tsuzukiwaza - Ushiro Ryokatadori" data-base-url="/video/">15° Tsuzukiwaza (Ushiro Ryokatadori)</div>
+                        <div class="table-row has-video" data-video="22 Tsuzukiwaza n°22.mp4" data-title="22° Tsuzukiwaza - Tantodori 2" data-base-url="/video/">22° Tsuzukiwaza (Tantodori 2)</div>
+                        <div class="table-row has-video" data-video="23 Bokkendori.mp4" data-title="23° Tsuzukiwaza - Bokkendori" data-base-url="/video/">23° Tsuzukiwaza (Bokendori)</div>
+                        <div class="table-row has-video" data-video="26 Jo-Bokken 2.mp4" data-title="26° Tsuzukiwaza - Jo e Bokken 2" data-base-url="/video/">26° Tsuzukiwaza (Jo e Boken 2) — l'esaminato usa il Jo</div>
+                        <div class="table-row has-video" data-video="28 Bokken Kumitachi 1.mp4" data-title="28° Tsuzukiwaza - Ichi-no-tachi" data-base-url="/video/">28° Tsuzukiwaza (Ichi-no-tachi)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JODEN -->
+        <section class="exam-section" id="joden">
+            <div class="exam-header dan">
+                <span class="exam-level">上</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Joden — 6° Grado di Ki</h2>
+                    <p class="exam-requirement">Minimo 3 anni di pratica dopo Nidan</p>
+                </div>
+                <span class="exam-kanji">上伝</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header gold">Test di Ki</div>
+                    <div class="table-content">
+                        <div class="table-row">Come Chuden</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SANDAN -->
+        <section class="exam-section" id="sandan">
+            <div class="exam-header dan">
+                <span class="exam-level">参</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Sandan — 3° Dan</h2>
+                    <p class="exam-requirement">Minimo 3 anni di pratica dopo Joden</p>
+                </div>
+                <span class="exam-kanji">参段</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table" style="grid-column: 1 / -1;">
+                    <div class="table-header gold">Tsuzukiwaza</div>
+                    <div class="table-content">
+                        <div class="table-row has-video" data-video="5 RyoKatadori.mp4" data-title="5° Tsuzukiwaza - Ryokatadori" data-base-url="/video/">5° Tsuzukiwaza (Ryokatadori)</div>
+                        <div class="table-row has-video" data-video="9 Tzuki and Keri.mp4" data-title="9° Tsuzukiwaza - Tsuki e Keri" data-base-url="/video/">9° Tsuzukiwaza (Tsuki e Keri)</div>
+                        <div class="table-row has-video" data-video="12 Ushiro Katatedori.mp4" data-title="12° Tsuzukiwaza - Ushirokatatedori" data-base-url="/video/">12° Tsuzukiwaza (Ushirokatatedori)</div>
+                        <div class="table-row has-video" data-video="18 Yokomenuchi.mp4" data-title="18° Tsuzukiwaza - Yokomenuchi" data-base-url="/video/">18° Tsuzukiwaza (Yokomenuchi)</div>
+                        <div class="table-row has-video" data-video="19 Tzuki.mp4" data-title="19° Tsuzukiwaza - Tsuki" data-base-url="/video/">19° Tsuzukiwaza (Tsuki)</div>
+                        <div class="table-row has-video" data-video="24 Jodori.mp4" data-title="24° Tsuzukiwaza - Jodori" data-base-url="/video/">24° Tsuzukiwaza (Jodori)</div>
+                        <div class="table-row has-video" data-video="25 Jo-Bokken 1.mp4" data-title="25° Tsuzukiwaza - Jo e Bokken 1" data-base-url="/video/">25° Tsuzukiwaza (Jo e Boken 1) — l'esaminato usa il Bokken</div>
+                        <div class="table-row has-video" data-video="26 Jo-Bokken 2.mp4" data-title="26° Tsuzukiwaza - Jo e Bokken 2" data-base-url="/video/">26° Tsuzukiwaza (Jo e Boken 2) — l'esaminato usa il Bokken</div>
+                        <div class="table-row has-video" data-video="10 Taninzukake.mp4" data-title="10° Tsuzukiwaza - Taninzugake" data-base-url="/video/">10° Tsuzukiwaza (Taninzugake) + Randori</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OKUDEN -->
+        <section class="exam-section" id="okuden">
+            <div class="exam-header dan">
+                <span class="exam-level">奥</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Okuden — 7° Grado di Ki</h2>
+                    <p class="exam-requirement">Minimo 4 anni di pratica dopo Sandan</p>
+                </div>
+                <span class="exam-kanji">奥伝</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table">
+                    <div class="table-header gold">Test di Ki</div>
+                    <div class="table-content">
+                        <div class="table-row">Come Joden. Conteggio del Kenko Taiso effettuato dall'esaminato con Ki e ritmo corretto</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- YONDAN -->
+        <section class="exam-section" id="yondan">
+            <div class="exam-header dan">
+                <span class="exam-level">四</span>
+                <div class="exam-title-group">
+                    <h2 class="exam-title">Yondan — 4° Dan</h2>
+                    <p class="exam-requirement">Minimo 4 anni di pratica dopo Okuden</p>
+                </div>
+                <span class="exam-kanji">四段</span>
+            </div>
+            <div class="exam-content">
+                <div class="exam-table" style="grid-column: 1 / -1;">
+                    <div class="table-header gold">Tsuzukiwaza</div>
+                    <div class="table-content">
+                        <div class="table-row">Tutto Hitoriwaza</div>
+                        <div class="table-row has-video" data-video="17 Katadori Menuci.mp4" data-title="17° Tsuzukiwaza - Katadori Menuchi" data-base-url="/video/">17° Tsuzukiwaza (Katadori Menuchi)</div>
+                        <div class="table-row has-video" data-video="29 Bokken Kumitachi 2.mp4" data-title="29° Tsuzukiwaza - Kumitachi 1" data-base-url="/video/">29° Tsuzukiwaza (Kumitachi 1)</div>
+                        <div class="table-row has-video" data-video="30 Shinken.mp4" data-title="30° Tsuzukiwaza - Kumitachi 2, Shinken" data-base-url="/video/">30° Tsuzukiwaza (Kumitachi 2, Shinken)</div>
+                        <div class="table-row">20° Tsuzukiwaza (Jonage) — video non disponibile</div>
+                    </div>
+                </div>
+            </div>
+            <div class="exam-notes"><strong>Note:</strong> Gli esaminatori possono richiedere tecniche libere al posto dello Tsuzukiwaza.</div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Ki-Aikido Prato</h4>
+                <p>Scuola affiliata alla Ki no Kenkyukai Internationale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul class="footer-nav">
+                    <li><a href="/esami/">Programma Esami</a></li>
+                    <li><a href="/esami/tsuzukiwaza.html">Video Tsuzukiwaza</a></li>
+                    <li><a href="/ranking.html">Ranking</a></li>
+                    <li><a href="/contatti.html">Contatti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contatti</h4>
+                <p><a href="mailto:info@kiaikidoprato.com">info@kiaikidoprato.com</a><br>Tel: <a href="tel:+393356909025">335 690 9025</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p></div>
+    </footer>
+
+    <div class="modal-overlay" id="videoModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <video class="modal-video" id="videoPlayer" controls></video>
+            <p class="modal-title" id="videoTitle"></p>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

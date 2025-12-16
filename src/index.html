@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ki-Aikido Prato - Scuola di Arti Marziali</title>
+    <meta name="description" content="Scuola di Ki-Aikido a Prato. Pratica l'arte marziale giapponese che unisce mente e corpo attraverso il Ki.">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, var(--paper-cream) 70%);
+            z-index: 1;
+        }
+
+        .hero-bg-kanji {
+            position: absolute;
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(15rem, 40vw, 35rem);
+            font-weight: 700;
+            color: rgba(26, 26, 26, 0.03);
+            z-index: 0;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-enso {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-enso svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-enso .enso-circle {
+            fill: none;
+            stroke: var(--ink-black);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: drawEnso 2.5s ease-out 0.5s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        .hero h1 span {
+            display: block;
+            font-size: 0.35em;
+            letter-spacing: 0.4em;
+            color: var(--stone-gray);
+            margin-top: 0.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--stone-gray);
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+            animation: fadeIn 1s ease-out 1.3s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease-out 1.6s both;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: fadeIn 1s ease-out 2s both, bounce 2s ease-in-out infinite 2.5s;
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: var(--stone-gray);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Sections */
+        .section-home {
+            padding: 5rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--stone-gray);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* Philosophy cards */
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            justify-content: center;
+        }
+
+        @media (max-width: 900px) {
+            .philosophy-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .philosophy-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
+        }
+
+        .philosophy-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px var(--deep-shadow);
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--vermillion);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .philosophy-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .philosophy-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .philosophy-kanji {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 3rem;
+            color: var(--vermillion);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .philosophy-card h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .philosophy-card p {
+            color: var(--stone-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Quick links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            justify-content: center;
+        }
+
+        @media (max-width: 900px) {
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .quick-links {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                padding: 0 1rem;
+            }
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 4px;
+            box-shadow: 0 4px 20px var(--deep-shadow);
+            text-decoration: none;
+            color: var(--ink-black);
+            transition: all 0.3s ease;
+        }
+
+        .quick-link:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 30px var(--deep-shadow);
+        }
+
+        .quick-link-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--paper-cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .quick-link-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--vermillion);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .quick-link-text h4 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-link-text p {
+            font-size: 0.85rem;
+            color: var(--stone-gray);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--ink-black);
+            color: var(--white);
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '氣';
+            position: absolute;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 20rem;
+            color: rgba(255, 255, 255, 0.02);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-enso">
+                <svg viewBox="0 0 100 100">
+                    <circle class="enso-circle" cx="50" cy="50" r="40" />
+                </svg>
+            </div>
+            <span class="nav-logo-text">Ki-Aikido Prato</span>
+        </a>
+        <button class="nav-toggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="/esami/">Esami</a></li>
+            <li><a href="/ranking.html">Ranking</a></li>
+            <li><a href="/contatti.html">Contatti</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <span class="hero-bg-kanji">氣</span>
+        <div class="hero-content">
+            <div class="hero-enso">
+                <svg viewBox="0 0 100 100">
+                    <circle class="enso-circle" cx="50" cy="50" r="40" />
+                </svg>
+            </div>
+            <h1>
+                Ki-Aikido
+                <span>Prato</span>
+            </h1>
+            <p class="hero-subtitle">
+                L'arte dell'unificazione di mente e corpo attraverso il Ki.
+                Una pratica che trasforma il conflitto in armonia.
+            </p>
+            <div class="hero-cta">
+                <a href="/contatti.html" class="btn btn-primary">Prova una Lezione</a>
+                <a href="/chi-siamo.html" class="btn btn-outline" style="color: var(--ink-black);">Scopri di più</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="section-home">
+        <div class="section-header">
+            <h2>I Quattro Principi</h2>
+            <p>Il Ki-Aikido si fonda su quattro principi fondamentali che guidano la pratica e la vita quotidiana.</p>
+        </div>
+        <div class="philosophy-grid stagger-children">
+            <div class="philosophy-card">
+                <div class="philosophy-kanji">一</div>
+                <h3>Mantieni il Punto</h3>
+                <p>Trova stabilità portando l'attenzione nel centro del corpo (basso ventre). Come un albero con radici profonde che non viene abbattuto dal vento.</p>
+            </div>
+            <div class="philosophy-card">
+                <div class="philosophy-kanji">二</div>
+                <h3>Rilassati Completamente</h3>
+                <p>Elimina le tensioni inutili dal corpo. Come quando lasci cadere le spalle dopo una lunga giornata: sei più forte quando sei rilassato.</p>
+            </div>
+            <div class="philosophy-card">
+                <div class="philosophy-kanji">三</div>
+                <h3>Peso Sotto</h3>
+                <p>Mantieni il baricentro basso e radicato a terra. Pensa a come un bambino piccolo è difficile da spostare quando gioca seduto per terra.</p>
+            </div>
+            <div class="philosophy-card">
+                <div class="philosophy-kanji">四</div>
+                <h3>Estendi il Ki</h3>
+                <p>Proietta la tua intenzione e presenza in ogni direzione. Come quando allunghi un braccio per indicare qualcosa in lontananza, con naturalezza.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links Section -->
+    <section class="section-home" style="background: var(--light-cream); margin: 0 -100vw; padding-left: calc(100vw - 50%); padding-right: calc(100vw - 50%);">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <div class="section-header">
+                <h2>Esplora</h2>
+                <p>Tutto quello che serve per iniziare il tuo percorso nel Ki-Aikido.</p>
+            </div>
+            <div class="quick-links stagger-children">
+                <a href="/esami/" class="quick-link">
+                    <div class="quick-link-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="quick-link-text">
+                        <h4>Programma Esami</h4>
+                        <p>Tecniche e requisiti per ogni grado</p>
+                    </div>
+                </a>
+                <a href="/esami/tsuzukiwaza.html" class="quick-link">
+                    <div class="quick-link-icon">
+                        <svg viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="quick-link-text">
+                        <h4>Video Tsuzukiwaza</h4>
+                        <p>Sequenze tecniche in video</p>
+                    </div>
+                </a>
+                <a href="/ranking.html" class="quick-link">
+                    <div class="quick-link-icon">
+                        <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <div class="quick-link-text">
+                        <h4>I Nostri Praticanti</h4>
+                        <p>La comunità del dojo</p>
+                    </div>
+                </a>
+                <a href="/chi-siamo.html" class="quick-link">
+                    <div class="quick-link-icon">
+                        <svg viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <div class="quick-link-text">
+                        <h4>Dove Siamo</h4>
+                        <p>Le nostre sedi a Prato</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Inizia il Tuo Percorso</h2>
+            <p>La prima lezione di prova è gratuita. Vieni a scoprire il Ki-Aikido e l'armonia del movimento.</p>
+            <a href="/contatti.html" class="btn btn-gold">Contattaci</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+        <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Ki-Aikido Prato</h4>
+                <p>Scuola affiliata alla Ki no Kenkyukai Internationale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul class="footer-nav">
+                    <li><a href="/esami/">Programma Esami</a></li>
+                    <li><a href="/ranking.html">Ranking</a></li>
+                    <li><a href="/contatti.html">Contatti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contatti</h4>
+                <p><a href="mailto:info@kiaikidoprato.com">info@kiaikidoprato.com</a><br>Tel: <a href="tel:+393356909025">335 690 9025</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+    <script src="/js/main.js"></script>
+</body>
+</html>

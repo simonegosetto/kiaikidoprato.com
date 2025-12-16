@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsuzukiwaza - Ki-Aikido Prato</title>
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink-black: #1a1a1a;
+            --paper-cream: #f5f0e8;
+            --vermillion: #c73e1d;
+            --gold-accent: #c9a959;
+            --stone-gray: #6b6b6b;
+            --deep-shadow: rgba(26, 26, 26, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            background: var(--paper-cream);
+            color: var(--ink-black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            z-index: 500;
+            background: linear-gradient(180deg, var(--paper-cream) 0%, rgba(245, 240, 232, 0.98) 80%, rgba(245, 240, 232, 0) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--ink-black);
+        }
+
+        .nav-logo-enso { width: 36px; height: 36px; }
+        .nav-logo-enso svg { width: 100%; height: 100%; }
+        .nav-logo-text { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; font-weight: 500; letter-spacing: 0.05em; }
+
+        .nav-menu { display: flex; gap: 0.5rem; list-style: none; }
+        .nav-menu a { display: inline-block; padding: 0.5rem 1rem; color: var(--ink-black); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.03em; border-radius: 2px; transition: all 0.3s ease; }
+        .nav-menu a:hover, .nav-menu a.active { color: var(--vermillion); background: rgba(199, 62, 29, 0.08); }
+
+        .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 1001; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--ink-black); transition: all 0.3s ease; }
+
+        @media (max-width: 768px) {
+            .nav-toggle { display: flex; }
+            .nav-menu { position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; background: var(--paper-cream); flex-direction: column; padding: 5rem 2rem 2rem; gap: 0; box-shadow: -4px 0 20px var(--deep-shadow); transition: right 0.4s ease; z-index: 1000; }
+            .nav-menu.active { right: 0; }
+            .nav-menu a { padding: 1rem; border-bottom: 1px solid rgba(26, 26, 26, 0.08); }
+            .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+            .nav-toggle.active span:nth-child(2) { opacity: 0; }
+            .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            padding: 6rem 2rem 3rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--paper-cream) 0%, rgba(245, 240, 232, 0) 100%);
+        }
+
+        .enso {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            position: relative;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .enso svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .enso-circle {
+            fill: none;
+            stroke: var(--ink-black);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: drawEnso 2s ease-out 0.5s forwards;
+        }
+
+        @keyframes drawEnso {
+            to {
+                stroke-dashoffset: 30;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 300;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--stone-gray);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        /* Decorative line */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: var(--vermillion);
+            margin: 2rem auto;
+            position: relative;
+            animation: expandLine 1s ease-out 0.9s both;
+        }
+
+        @keyframes expandLine {
+            from {
+                width: 0;
+            }
+            to {
+                width: 60px;
+            }
+        }
+
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+        }
+
+        .intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--stone-gray);
+            animation: fadeIn 1s ease-out 1.2s both;
+        }
+
+        /* Exam Selector - Compact */
+        .exam-selector {
+            background: white;
+            border-radius: 4px;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px var(--deep-shadow);
+            animation: fadeIn 1s ease-out 1.4s both;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .exam-selector-label {
+            font-size: 0.8rem;
+            color: var(--stone-gray);
+            white-space: nowrap;
+        }
+
+        .exam-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            flex: 1;
+        }
+
+        .exam-btn {
+            padding: 0.35rem 0.7rem;
+            border: none;
+            background: var(--paper-cream);
+            color: var(--ink-black);
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            font-size: 0.75rem;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .exam-btn:hover { background: var(--vermillion); color: white; }
+        .exam-btn.active { background: var(--vermillion); color: white; }
+        .exam-btn.dan { background: rgba(201, 169, 89, 0.2); }
+        .exam-btn.dan:hover, .exam-btn.dan.active { background: var(--gold-accent); color: var(--ink-black); }
+
+        .selected-exam-info { display: none; }
+
+        /* Video grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--deep-shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-card.hidden {
+            display: none;
+        }
+
+        .video-card.fade-in {
+            animation: cardFadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--vermillion);
+            transform: scaleY(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--deep-shadow);
+        }
+
+        .video-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .card-thumbnail {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--ink-black) 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-thumbnail::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(201, 169, 89, 0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                transform: translate(-50%, -50%);
+            }
+            50% {
+                transform: translate(-30%, -30%);
+            }
+        }
+
+        .card-number {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--vermillion);
+            background: rgba(255, 255, 255, 0.95);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            z-index: 2;
+        }
+
+        .card-number.small {
+            font-size: 1rem;
+        }
+
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .play-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-left: 4px;
+        }
+
+        .video-card:hover .play-icon {
+            background: var(--vermillion);
+            border-color: var(--vermillion);
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.8rem;
+            color: var(--stone-gray);
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--stone-gray);
+        }
+
+        .card-meta svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--stone-gray);
+        }
+
+        .card-exams {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            margin-top: 0.75rem;
+        }
+
+        .exam-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--paper-cream);
+            border-radius: 2px;
+            color: var(--stone-gray);
+        }
+
+        .exam-tag.dan {
+            background: rgba(201, 169, 89, 0.2);
+            color: #8a7033;
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--stone-gray);
+            display: none;
+        }
+
+        .no-results.visible {
+            display: block;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--vermillion);
+            border-color: var(--vermillion);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .modal-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: black;
+            border-radius: 4px;
+        }
+
+        .modal-title {
+            color: white;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.25rem;
+            font-weight: 300;
+            margin-top: 1.5rem;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(26, 26, 26, 0.1);
+        }
+
+        .footer-logo {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            color: var(--vermillion);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-buttons {
+                gap: 0.4rem;
+            }
+
+            .exam-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    /* Footer */
+        .main-footer { background: #1a1a1a; color: #fff; padding: 4rem 2rem 2rem; margin-top: 4rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
+        .footer-section h4 { font-size: 1rem; font-weight: 500; margin-bottom: 1.25rem; color: #c9a959; letter-spacing: 0.1em; }
+        .footer-section p, .footer-section a { font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.8; }
+        .footer-section a:hover { color: #fff; }
+        .footer-nav { list-style: none; }
+        .footer-nav li { margin-bottom: 0.5rem; }
+        .footer-bottom { max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-enso"><svg viewBox="0 0 100 100"><circle class="enso-circle" cx="50" cy="50" r="40" fill="none" stroke="#1a1a1a" stroke-width="6" stroke-linecap="round" stroke-dasharray="300" stroke-dashoffset="30"/></svg></div>
+            <span class="nav-logo-text">Ki-Aikido Prato</span>
+        </a>
+        <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="/esami/" class="active">Esami</a></li>
+            <li><a href="/ranking.html">Ranking</a></li>
+            <li><a href="/contatti.html">Contatti</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <div class="enso">
+            <svg viewBox="0 0 100 100">
+                <circle class="enso-circle" cx="50" cy="50" r="40" />
+            </svg>
+        </div>
+        <h1>続き技</h1>
+        <p class="subtitle">Tsuzukiwaza</p>
+        <div class="divider"></div>
+    </header>
+
+    <main>
+        <p class="intro">
+            I <strong>Tsuzukiwaza</strong> sono sequenze di tecniche concatenate che rappresentano
+            il cuore della pratica avanzata del Ki-Aikido. Seleziona il tuo esame per visualizzare
+            solo i video necessari alla preparazione.
+        </p>
+
+        <div class="exam-selector">
+            <span class="exam-selector-label">Filtra:</span>
+            <div class="exam-buttons">
+                <button class="exam-btn active" data-exam="all">Tutti</button>
+                <button class="exam-btn" data-exam="1kyu">1°Kyu</button>
+                <button class="exam-btn dan" data-exam="shodan">1°Dan</button>
+                <button class="exam-btn dan" data-exam="nidan">2°Dan</button>
+                <button class="exam-btn dan" data-exam="sandan">3°Dan</button>
+                <button class="exam-btn dan" data-exam="yondan">4°Dan</button>
+            </div>
+        </div>
+
+        <div class="video-grid" id="videoGrid">
+            <!-- Cards generated via JavaScript -->
+        </div>
+
+        <div class="no-results" id="noResults">
+            <p>Nessun Tsuzukiwaza richiesto per questo esame.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p class="footer-logo">Ki-Aikido Prato</p>
+        <a href="/" class="footer-link" target="_blank">kiaikidoprato.com</a>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="modal-overlay" id="videoModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <video class="modal-video" id="videoPlayer" controls>
+                <source src="" type="video/mp4">
+                Il tuo browser non supporta il tag video.
+            </video>
+            <p class="modal-title" id="videoTitle"></p>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = '/video/tsuzukiwaza/';
+
+        // Exam requirements based on Un.I.K.A. program
+        const examRequirements = {
+            '1kyu': {
+                name: '1° Kyu',
+                description: 'Minimo 8 mesi di pratica dopo Jokyu',
+                tsuzukiwaza: [1, 3, 14, 16]
+            },
+            'shodan': {
+                name: 'Shodan (1° Dan)',
+                description: 'Minimo 1 anno di pratica dopo Shoden',
+                tsuzukiwaza: [2, 8, 11, 13, 21, 25, 27]
+            },
+            'nidan': {
+                name: 'Nidan (2° Dan)',
+                description: 'Minimo 2 anni di pratica dopo Chuden',
+                tsuzukiwaza: [4, 6, 7, 15, 22, 23, 26, 28]
+            },
+            'sandan': {
+                name: 'Sandan (3° Dan)',
+                description: 'Minimo 3 anni di pratica dopo Joden',
+                tsuzukiwaza: [5, 9, 10, 12, 18, 19, 24, 25, 26]
+            },
+            'yondan': {
+                name: 'Yondan (4° Dan)',
+                description: 'Minimo 4 anni di pratica dopo Okuden',
+                tsuzukiwaza: [17, 20, 29, 30]
+            }
+        };
+
+        const videos = [
+            { num: 1, title: "Katatedori Tenkan", file: "1 Katatedori tenkan.mp4", size: "26 MB", exams: ['1kyu'] },
+            { num: 2, title: "Ushiro Katatetori", file: "2 Ushiro katatetori.mp4", size: "20 MB", exams: ['shodan'] },
+            { num: 3, title: "Ryotemochi", file: "3 Ryotemochi.mp4", size: "22 MB", exams: ['1kyu'] },
+            { num: 4, title: "Ryotedori", file: "4 Ryotedori.mp4", size: "17 MB", exams: ['nidan'] },
+            { num: 5, title: "Ryokatadori", file: "5 RyoKatadori.mp4", size: "23 MB", exams: ['sandan'] },
+            { num: 6, title: "Ushirotori", file: "6 Ushirotori.mp4", size: "28 MB", exams: ['nidan'] },
+            { num: 7, title: "Shomenuchi", file: "7 Shomenuchi.mp4", size: "19 MB", exams: ['nidan'] },
+            { num: 8, title: "Yokomenuchi", file: "8 Yokomunuchi.mp4", size: "21 MB", exams: ['shodan'] },
+            { num: 9, title: "Tsuki e Keri", file: "9 Tzuki and Keri.mp4", size: "25 MB", exams: ['sandan'] },
+            { num: 10, title: "Taninzukake", file: "10 Taninzukake.mp4", size: "27 MB", exams: ['sandan'] },
+            { num: 11, title: "Katatedori Irimi", file: "11 Katatedori irimi.mp4", size: "18 MB", exams: ['shodan'] },
+            { num: 12, title: "Ushiro Katatedori", file: "12 Ushiro Katatedori.mp4", size: "25 MB", exams: ['sandan'] },
+            { num: 13, title: "Ryotemochi", file: "13 Ryotemochi.mp4", size: "23 MB", exams: ['shodan'] },
+            { num: 14, title: "Ryotedori (Suwari)", subtitle: "Suwariwaza", file: "14 Ryotedori (suwari).mp4", size: "21 MB", exams: ['1kyu'] },
+            { num: 15, title: "Ushiro Ryokatadori", file: "15 UshiroRyoKatadori.mp4", size: "29 MB", exams: ['nidan'] },
+            { num: 16, title: "Handachi", file: "16 Handachi.mp4", size: "21 MB", exams: ['1kyu'] },
+            { num: 17, title: "Katadori Menuchi", file: "17 Katadori Menuci.mp4", size: "25 MB", exams: ['yondan'] },
+            { num: 18, title: "Yokomenuchi", file: "18 Yokomenuchi.mp4", size: "20 MB", exams: ['sandan'] },
+            { num: 19, title: "Tsuki", file: "19 Tzuki.mp4", size: "21 MB", exams: ['sandan'] },
+            { num: 21, title: "Tantodori 1", file: "21 Tsuzukiwaza n°21.mp4", size: "50 MB", exams: ['shodan'] },
+            { num: 22, title: "Tantodori 2", file: "22 Tsuzukiwaza n°22.mp4", size: "51 MB", exams: ['nidan'] },
+            { num: 23, title: "Bokkendori", file: "23 Bokkendori.mp4", size: "42 MB", exams: ['nidan'] },
+            { num: 24, title: "Jodori", file: "24 Jodori.mp4", size: "59 MB", exams: ['sandan'] },
+            { num: 25, title: "Jo e Bokken 1", file: "25 Jo-Bokken 1.mp4", size: "16 MB", exams: ['shodan', 'sandan'], note: "Shodan: esaminato usa Jo / Sandan: esaminato usa Bokken" },
+            { num: 26, title: "Jo e Bokken 2", file: "26 Jo-Bokken 2.mp4", size: "17 MB", exams: ['nidan', 'sandan'], note: "Nidan: esaminato usa Jo (didattico) / Sandan: esaminato usa Bokken" },
+            { num: 27, title: "Happogiri", file: "27 Happogiri.mp4", size: "9.5 MB", exams: ['shodan'] },
+            { num: 28, title: "Bokken Kumitachi 1", subtitle: "Ichi-no-tachi", file: "28 Bokken Kumitachi 1.mp4", size: "6.6 MB", exams: ['nidan'] },
+            { num: 29, title: "Bokken Kumitachi 2", file: "29 Bokken Kumitachi 2.mp4", size: "15 MB", exams: ['yondan'] },
+            { num: 30, title: "Shinken", subtitle: "Kumitachi 2", file: "30 Shinken.mp4", size: "26 MB", exams: ['yondan'] },
+        ];
+
+        const grid = document.getElementById('videoGrid');
+        const examInfo = document.getElementById('examInfo');
+        const examName = document.getElementById('examName');
+        const videoCount = document.getElementById('videoCount');
+        const noResults = document.getElementById('noResults');
+
+        // Generate all cards
+        videos.forEach((video, index) => {
+            const card = document.createElement('article');
+            card.className = 'video-card';
+            card.dataset.video = video.file;
+            card.dataset.title = `${video.num} - ${video.title}`;
+            card.dataset.num = video.num;
+            card.dataset.exams = video.exams.join(',');
+
+            const examTags = video.exams.map(exam => {
+                const isDan = ['shodan', 'nidan', 'sandan', 'yondan'].includes(exam);
+                const examLabel = examRequirements[exam]?.name || exam;
+                return `<span class="exam-tag ${isDan ? 'dan' : ''}">${examLabel}</span>`;
+            }).join('');
+
+            const subtitleHtml = video.subtitle ? `<p class="card-subtitle">${video.subtitle}</p>` : '';
+            const noteHtml = video.note ? `<p class="card-subtitle">${video.note}</p>` : '';
+
+            card.innerHTML = `
+                <div class="card-thumbnail">
+                    <span class="card-number ${String(video.num).length > 2 ? 'small' : ''}">${video.num}</span>
+                    <div class="play-icon">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">${video.title}</h3>
+                    ${subtitleHtml}
+                    ${noteHtml}
+                    <div class="card-meta">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        <span>${video.size}</span>
+                    </div>
+                    <div class="card-exams">${examTags}</div>
+                </div>
+            `;
+
+            grid.appendChild(card);
+        });
+
+        // Filter functionality
+        const examButtons = document.querySelectorAll('.exam-btn');
+
+        function filterVideos(exam) {
+            const cards = document.querySelectorAll('.video-card');
+            let visibleCount = 0;
+
+            cards.forEach((card, index) => {
+                const cardExams = card.dataset.exams.split(',');
+                const shouldShow = exam === 'all' || cardExams.includes(exam);
+
+                if (shouldShow) {
+                    card.classList.remove('hidden');
+                    card.classList.add('fade-in');
+                    card.style.animationDelay = `${visibleCount * 0.05}s`;
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('fade-in');
+                }
+            });
+
+            // Update info
+            if (exam === 'all') {
+                examInfo.classList.remove('visible');
+                noResults.classList.remove('visible');
+            } else {
+                const examData = examRequirements[exam];
+                examName.textContent = `${examData.name} — ${examData.description}`;
+                videoCount.textContent = `${visibleCount} Tsuzukiwaza richiesti`;
+                examInfo.classList.add('visible');
+
+                if (visibleCount === 0) {
+                    noResults.classList.add('visible');
+                } else {
+                    noResults.classList.remove('visible');
+                }
+            }
+        }
+
+        examButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                examButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterVideos(btn.dataset.exam);
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('videoModal');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoTitle = document.getElementById('videoTitle');
+        const closeBtn = document.getElementById('closeModal');
+
+        grid.addEventListener('click', (e) => {
+            const card = e.target.closest('.video-card');
+            if (!card) return;
+
+            const videoFile = card.dataset.video;
+            const title = card.dataset.title;
+
+            videoPlayer.src = BASE_URL + encodeURIComponent(videoFile);
+            videoTitle.textContent = title;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            videoPlayer.play().catch(() => {});
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            videoPlayer.pause();
+            videoPlayer.src = '';
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+    <script src="/js/main.js"></script>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Ki-Aikido Prato</h4>
+                <p>Scuola affiliata alla Ki no Kenkyukai Internationale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul class="footer-nav">
+                    <li><a href="/esami/">Programma Esami</a></li>
+                    <li><a href="/ranking.html">Ranking</a></li>
+                    <li><a href="/contatti.html">Contatti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contatti</h4>
+                <p><a href="mailto:info@kiaikidoprato.com">info@kiaikidoprato.com</a><br>Tel: <a href="tel:+393356909025">335 690 9025</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+</body>
+</html>
