@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossario Aikido - Ki Aikido Prato | Termini e Tecniche Arti Marziali</title>
+    <meta name="description" content="Glossario completo dei termini dell'Aikido: tecniche, posizioni, principi e concetti fondamentali. Scuola Ki Aikido Prato, Toscana.">
+    <meta name="keywords" content="glossario aikido, termini aikido, dizionario aikido, tecniche aikido, ki aikido prato, arti marziali terminologia">
+    <link rel="canonical" href="https://www.kiaikidoprato.com/glossario.html">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+    <!-- Preconnect per Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Caricamento asincrono dei font -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap"></noscript>
+
+    <!-- Critical CSS inline -->
+    <style>:root{--ink-black:#1a1a1a;--paper-cream:#f5f0e8;--vermillion:#c73e1d;--white:#fff}*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--paper-cream);color:var(--ink-black);min-height:100vh;line-height:1.6;overflow-x:hidden}</style>
+
+    <!-- Caricamento asincrono CSS principale -->
+    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+
+    <style>
+        /* Glossary Specific Styles */
+        .glossary-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .glossary-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .glossary-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            color: var(--ink-black);
+        }
+
+        .glossary-header p {
+            font-size: 1.1rem;
+            color: var(--stone-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search and Filter Section */
+        .glossary-controls {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(26, 26, 26, 0.08);
+        }
+
+        .search-box {
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid rgba(26, 26, 26, 0.1);
+            border-radius: 8px;
+            background: var(--paper-cream);
+            color: var(--ink-black);
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--vermillion);
+            box-shadow: 0 0 0 4px rgba(199, 62, 29, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--light-gray);
+        }
+
+        /* Alphabet Filter */
+        .alphabet-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .letter-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(26, 26, 26, 0.1);
+            background: var(--paper-cream);
+            color: var(--ink-black);
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+        }
+
+        .letter-btn:hover {
+            border-color: var(--vermillion);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .letter-btn.active {
+            background: var(--vermillion);
+            color: white;
+            border-color: var(--vermillion);
+        }
+
+        .letter-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .letter-btn.disabled:hover {
+            transform: none;
+            border-color: rgba(26, 26, 26, 0.1);
+            background: var(--paper-cream);
+        }
+
+        .clear-filter {
+            padding: 0.5rem 1.5rem;
+            background: var(--ink-black);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+        }
+
+        .clear-filter:hover {
+            background: var(--vermillion);
+        }
+
+        /* Glossary Content */
+        .glossary-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-letter {
+            font-size: 3rem;
+            font-family: 'Noto Serif JP', serif;
+            color: var(--vermillion);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--vermillion);
+            display: inline-block;
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .glossary-term {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(26, 26, 26, 0.06);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--vermillion);
+        }
+
+        .glossary-term:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(26, 26, 26, 0.12);
+        }
+
+        .term-title {
+            font-size: 1.4rem;
+            font-family: 'Noto Serif JP', serif;
+            color: var(--ink-black);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .term-kanji {
+            font-size: 2rem;
+            color: var(--vermillion);
+            margin-bottom: 0.5rem;
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .term-definition {
+            color: var(--stone-gray);
+            line-height: 1.7;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--stone-gray);
+        }
+
+        .no-results svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Hidden class for filtering */
+        .hidden {
+            display: none;
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--vermillion);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(199, 62, 29, 0.3);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            background: var(--vermillion-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .glossary-container {
+                padding: 7rem 1rem 2rem;
+            }
+
+            .glossary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .alphabet-filter {
+                gap: 0.3rem;
+            }
+
+            .letter-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .section-letter {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <div class="nav-logo-enso">
+                <svg viewBox="0 0 100 100">
+                    <circle class="enso-circle" cx="50" cy="50" r="40" />
+                </svg>
+            </div>
+            <span class="nav-logo-text">Ki-Aikido Prato</span>
+        </a>
+        <button class="nav-toggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="/esami/">Esami</a></li>
+            <li><a href="/ranking.html">Ranking</a></li>
+            <li><a href="/glossario.html" class="active">Glossario</a></li>
+            <li><a href="/contatti.html">Contatti</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="glossary-container">
+        <div class="glossary-header">
+            <h1>Glossario Aikido</h1>
+            <p>Terminologia essenziale dell'Aikido: tecniche, principi e concetti fondamentali</p>
+        </div>
+
+        <!-- Search and Filter Controls -->
+        <div class="glossary-controls">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Cerca termine... (es. Aikido, Uke, Kamae)"
+                    autocomplete="off"
+                >
+            </div>
+            <div class="alphabet-filter">
+                <button class="letter-btn" data-letter="A">A</button>
+                <button class="letter-btn" data-letter="B">B</button>
+                <button class="letter-btn" data-letter="C">C</button>
+                <button class="letter-btn" data-letter="D">D</button>
+                <button class="letter-btn" data-letter="E">E</button>
+                <button class="letter-btn" data-letter="F">F</button>
+                <button class="letter-btn" data-letter="G">G</button>
+                <button class="letter-btn" data-letter="H">H</button>
+                <button class="letter-btn" data-letter="I">I</button>
+                <button class="letter-btn" data-letter="J">J</button>
+                <button class="letter-btn" data-letter="K">K</button>
+                <button class="letter-btn" data-letter="M">M</button>
+                <button class="letter-btn" data-letter="N">N</button>
+                <button class="letter-btn" data-letter="O">O</button>
+                <button class="letter-btn" data-letter="R">R</button>
+                <button class="letter-btn" data-letter="S">S</button>
+                <button class="letter-btn" data-letter="T">T</button>
+                <button class="letter-btn" data-letter="U">U</button>
+                <button class="letter-btn" data-letter="Y">Y</button>
+                <button class="letter-btn" data-letter="Z">Z</button>
+                <button class="clear-filter" id="clearFilter">Tutti</button>
+            </div>
+        </div>
+
+        <!-- Glossary Content -->
+        <div id="glossaryContent">
+            <!-- A -->
+            <div class="glossary-section" data-section="A">
+                <h2 class="section-letter">A</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Ai">
+                        <div class="term-kanji">合</div>
+                        <h3 class="term-title">Ai</h3>
+                        <p class="term-definition">Unione, armonia. Il principio fondamentale dell'Aikido che enfatizza l'unificazione con l'energia dell'attaccante piuttosto che opporsi ad essa.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Aikido">
+                        <div class="term-kanji">合気道</div>
+                        <h3 class="term-title">Aikido</h3>
+                        <p class="term-definition">La Via dell'armonia con il Ki. Arte marziale giapponese fondata da Morihei Ueshiba che enfatizza l'uso dell'energia vitale e dell'armonia per neutralizzare gli attacchi.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ashi">
+                        <div class="term-kanji">足</div>
+                        <h3 class="term-title">Ashi</h3>
+                        <p class="term-definition">Gamba, piede. Fondamentale per il lavoro di gambe e spostamenti nell'Aikido.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Atemi">
+                        <div class="term-kanji">当身</div>
+                        <h3 class="term-title">Atemi</h3>
+                        <p class="term-definition">Colpo al corpo. Tecniche di colpo utilizzate per distrarre o destabilizzare l'avversario, preparando l'applicazione della tecnica principale.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- B -->
+            <div class="glossary-section" data-section="B">
+                <h2 class="section-letter">B</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Bokken">
+                        <div class="term-kanji">木剣</div>
+                        <h3 class="term-title">Bokken</h3>
+                        <p class="term-definition">Spada di legno utilizzata nell'allenamento. Replica in legno della katana giapponese, essenziale per lo studio delle tecniche con armi.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Budo">
+                        <div class="term-kanji">武道</div>
+                        <h3 class="term-title">Budo</h3>
+                        <p class="term-definition">La Via delle arti marziali. Sistema filosofico e pratico che integra tecniche di combattimento con principi etici e spirituali.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Bunkai">
+                        <div class="term-kanji">分解</div>
+                        <h3 class="term-title">Bunkai</h3>
+                        <p class="term-definition">Analisi, scomposizione. Studio dettagliato di una tecnica nelle sue componenti fondamentali.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- D -->
+            <div class="glossary-section" data-section="D">
+                <h2 class="section-letter">D</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Dan">
+                        <div class="term-kanji">段</div>
+                        <h3 class="term-title">Dan</h3>
+                        <p class="term-definition">Grado, livello. Sistema di gradi per cinture nere, numerati dal 1° al 10° Dan, che indicano il livello di maestria raggiunto.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Do">
+                        <div class="term-kanji">道</div>
+                        <h3 class="term-title">Do</h3>
+                        <p class="term-definition">Via, cammino. Non solo la tecnica ma il percorso di crescita personale e spirituale attraverso la pratica dell'arte marziale.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Dojo">
+                        <div class="term-kanji">道場</div>
+                        <h3 class="term-title">Dojo</h3>
+                        <p class="term-definition">Luogo dove si pratica la Via. Palestra tradizionale giapponese dove si studia e si pratica l'arte marziale.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Dori">
+                        <div class="term-kanji">取り</div>
+                        <h3 class="term-title">Dori</h3>
+                        <p class="term-definition">Presa. Termine che indica l'azione di afferrare, utilizzato nella denominazione di molte tecniche.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- G -->
+            <div class="glossary-section" data-section="G">
+                <h2 class="section-letter">G</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Gi">
+                        <div class="term-kanji">着</div>
+                        <h3 class="term-title">Gi</h3>
+                        <p class="term-definition">Divisa da allenamento. Uniforme tradizionale indossata durante la pratica dell'Aikido, composta da giacca, pantaloni e hakama.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Gyaku">
+                        <div class="term-kanji">逆</div>
+                        <h3 class="term-title">Gyaku</h3>
+                        <p class="term-definition">Opposto, inverso. Indica una tecnica eseguita dal lato opposto o in direzione contraria a quella abituale.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- H -->
+            <div class="glossary-section" data-section="H">
+                <h2 class="section-letter">H</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Hakama">
+                        <div class="term-kanji">袴</div>
+                        <h3 class="term-title">Hakama</h3>
+                        <p class="term-definition">Gonna-pantalone tradizionale giapponese. Indumento con sette pieghe (cinque davanti, due dietro) che simboleggiano le virtù del Budo.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Hanmi">
+                        <div class="term-kanji">半身</div>
+                        <h3 class="term-title">Hanmi</h3>
+                        <p class="term-definition">Posizione a mezzo profilo. Postura fondamentale nell'Aikido dove il corpo è orientato lateralmente, offrendo meno bersaglio all'avversario.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Hara">
+                        <div class="term-kanji">腹</div>
+                        <h3 class="term-title">Hara</h3>
+                        <p class="term-definition">Centro fisico e spirituale del corpo. Punto situato nell'addome inferiore, considerato sede del Ki e centro di equilibrio.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Henka">
+                        <div class="term-kanji">変化</div>
+                        <h3 class="term-title">Henka</h3>
+                        <p class="term-definition">Variazione. Modifica o adattamento di una tecnica in risposta a diverse situazioni o reazioni dell'avversario.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- I -->
+            <div class="glossary-section" data-section="I">
+                <h2 class="section-letter">I</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Irimi">
+                        <div class="term-kanji">入身</div>
+                        <h3 class="term-title">Irimi</h3>
+                        <p class="term-definition">Entrare nel corpo. Movimento di ingresso diretto verso l'avversario, uno dei due movimenti fondamentali dell'Aikido insieme al Tenkan.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ikkyo">
+                        <div class="term-kanji">一教</div>
+                        <h3 class="term-title">Ikkyo</h3>
+                        <p class="term-definition">Primo principio. Prima tecnica fondamentale di controllo del braccio e della spalla dell'avversario.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- J -->
+            <div class="glossary-section" data-section="J">
+                <h2 class="section-letter">J</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Jo">
+                        <div class="term-kanji">杖</div>
+                        <h3 class="term-title">Jo</h3>
+                        <p class="term-definition">Bastone corto. Arma tradizionale in legno lunga circa 128 cm, utilizzata nell'allenamento per sviluppare distanza, tempismo e fluidità.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Jiyu Waza">
+                        <div class="term-kanji">自由技</div>
+                        <h3 class="term-title">Jiyu Waza</h3>
+                        <p class="term-definition">Tecnica libera. Pratica in cui il difensore risponde liberamente a diversi attacchi, senza tecnica predeterminata.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- K -->
+            <div class="glossary-section" data-section="K">
+                <h2 class="section-letter">K</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Kamae">
+                        <div class="term-kanji">構え</div>
+                        <h3 class="term-title">Kamae</h3>
+                        <p class="term-definition">Postura, guardia. Posizione di preparazione fisica e mentale prima e durante l'esecuzione di una tecnica.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Kata">
+                        <div class="term-kanji">型</div>
+                        <h3 class="term-title">Kata</h3>
+                        <p class="term-definition">Forma, sequenza predeterminata. Serie codificata di movimenti che insegna principi e tecniche fondamentali.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Katana">
+                        <div class="term-kanji">刀</div>
+                        <h3 class="term-title">Katana</h3>
+                        <p class="term-definition">Spada giapponese tradizionale. Arma simbolo dei samurai, caratterizzata dalla lama curva e dal filo singolo.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Katatedori">
+                        <div class="term-kanji">片手取り</div>
+                        <h3 class="term-title">Katatedori</h3>
+                        <p class="term-definition">Presa a una mano. Attacco in cui l'avversario afferra un polso del difensore con una mano.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Keiko">
+                        <div class="term-kanji">稽古</div>
+                        <h3 class="term-title">Keiko</h3>
+                        <p class="term-definition">Allenamento, pratica. Il processo continuo di studio e perfezionamento attraverso la ripetizione.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Keri">
+                        <div class="term-kanji">蹴り</div>
+                        <h3 class="term-title">Keri</h3>
+                        <p class="term-definition">Calcio. Tecnica di attacco con i piedi e le gambe.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ki">
+                        <div class="term-kanji">気</div>
+                        <h3 class="term-title">Ki</h3>
+                        <p class="term-definition">Energia vitale, spirito. Concetto fondamentale che rappresenta l'energia universale presente in tutti gli esseri viventi.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Kiai">
+                        <div class="term-kanji">気合</div>
+                        <h3 class="term-title">Kiai</h3>
+                        <p class="term-definition">Grido di spirito. Grido che accompagna una tecnica, espressione della concentrazione di energia e spirito.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Kokyu">
+                        <div class="term-kanji">呼吸</div>
+                        <h3 class="term-title">Kokyu</h3>
+                        <p class="term-definition">Respiro, respirazione. Principio fondamentale che coordina respiro, movimento e flusso di Ki.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Koshi">
+                        <div class="term-kanji">腰</div>
+                        <h3 class="term-title">Koshi</h3>
+                        <p class="term-definition">Anche, fianchi. Centro di potenza del corpo da cui origina il movimento nell'Aikido.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Kote">
+                        <div class="term-kanji">小手</div>
+                        <h3 class="term-title">Kote</h3>
+                        <p class="term-definition">Avambraccio, polso. Area frequentemente controllata nelle tecniche di Aikido.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Kumitachi">
+                        <div class="term-kanji">組太刀</div>
+                        <h3 class="term-title">Kumitachi</h3>
+                        <p class="term-definition">Esercizio con le spade a coppie. Kata praticato con il bokken in cui due praticanti eseguono sequenze coordinate.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Kyu">
+                        <div class="term-kanji">級</div>
+                        <h3 class="term-title">Kyu</h3>
+                        <p class="term-definition">Classe, grado. Sistema di gradi per cinture colorate, numerati in ordine decrescente dal 6° al 1° Kyu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- M -->
+            <div class="glossary-section" data-section="M">
+                <h2 class="section-letter">M</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Ma-ai">
+                        <div class="term-kanji">間合い</div>
+                        <h3 class="term-title">Ma-ai</h3>
+                        <p class="term-definition">Distanza corretta. Spazio ottimale tra i praticanti, cruciale per tempismo ed efficacia delle tecniche.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Mae">
+                        <div class="term-kanji">前</div>
+                        <h3 class="term-title">Mae</h3>
+                        <p class="term-definition">Davanti, anteriore. Indica la direzione frontale o un attacco proveniente da davanti.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Migi">
+                        <div class="term-kanji">右</div>
+                        <h3 class="term-title">Migi</h3>
+                        <p class="term-definition">Destra. Indica il lato destro del corpo o una tecnica eseguita da quel lato.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Musubi">
+                        <div class="term-kanji">結び</div>
+                        <h3 class="term-title">Musubi</h3>
+                        <p class="term-definition">Collegamento, legame. Connessione armonica tra i praticanti durante l'esecuzione della tecnica.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- N -->
+            <div class="glossary-section" data-section="N">
+                <h2 class="section-letter">N</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Nage">
+                        <div class="term-kanji">投げ</div>
+                        <h3 class="term-title">Nage</h3>
+                        <p class="term-definition">Proiezione. Chi esegue la tecnica o tecnica di proiezione che porta l'avversario al suolo.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Nikyo">
+                        <div class="term-kanji">二教</div>
+                        <h3 class="term-title">Nikyo</h3>
+                        <p class="term-definition">Secondo principio. Tecnica di controllo che applica pressione sul polso e sull'avambraccio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- O -->
+            <div class="glossary-section" data-section="O">
+                <h2 class="section-letter">O</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Obi">
+                        <div class="term-kanji">帯</div>
+                        <h3 class="term-title">Obi</h3>
+                        <p class="term-definition">Cintura. Indica il grado del praticante attraverso il colore e viene legata attorno all'hakama o al gi.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Omote">
+                        <div class="term-kanji">表</div>
+                        <h3 class="term-title">Omote</h3>
+                        <p class="term-definition">Davanti, esterno. Variante di una tecnica eseguita entrando davanti all'avversario.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Onegaishimasu">
+                        <div class="term-kanji">お願いします</div>
+                        <h3 class="term-title">Onegaishimasu</h3>
+                        <p class="term-definition">Per favore, richiesta di pratica. Saluto rispettoso pronunciato all'inizio della pratica con un partner.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- R -->
+            <div class="glossary-section" data-section="R">
+                <h2 class="section-letter">R</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Randori">
+                        <div class="term-kanji">乱取り</div>
+                        <h3 class="term-title">Randori</h3>
+                        <p class="term-definition">Pratica libera. Esercizio in cui un difensore risponde a attacchi multipli e simultanei di più avversari.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Rei">
+                        <div class="term-kanji">礼</div>
+                        <h3 class="term-title">Rei</h3>
+                        <p class="term-definition">Saluto, etichetta. Inchino che esprime rispetto, gratitudine e umiltà nel dojo.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ryotedori">
+                        <div class="term-kanji">両手取り</div>
+                        <h3 class="term-title">Ryotedori</h3>
+                        <p class="term-definition">Presa a due mani. Attacco in cui l'avversario afferra entrambi i polsi del difensore.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S -->
+            <div class="glossary-section" data-section="S">
+                <h2 class="section-letter">S</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Sankyo">
+                        <div class="term-kanji">三教</div>
+                        <h3 class="term-title">Sankyo</h3>
+                        <p class="term-definition">Terzo principio. Tecnica di controllo che torce il polso verso l'interno e verso l'alto.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Seiza">
+                        <div class="term-kanji">正座</div>
+                        <h3 class="term-title">Seiza</h3>
+                        <p class="term-definition">Posizione seduta formale. Postura tradizionale giapponese in ginocchio con i piedi sotto i glutei.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Sensei">
+                        <div class="term-kanji">先生</div>
+                        <h3 class="term-title">Sensei</h3>
+                        <p class="term-definition">Maestro, insegnante. Titolo di rispetto per chi ha esperienza e guida altri nel cammino.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Shiho">
+                        <div class="term-kanji">四方</div>
+                        <h3 class="term-title">Shiho</h3>
+                        <p class="term-definition">Quattro direzioni. Riferimento alle quattro direzioni cardinali, importante nei movimenti e nelle proiezioni.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Shihan">
+                        <div class="term-kanji">師範</div>
+                        <h3 class="term-title">Shihan</h3>
+                        <p class="term-definition">Maestro modello. Titolo onorifico per un insegnante di alto livello e grande esperienza.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Shikko">
+                        <div class="term-kanji">膝行</div>
+                        <h3 class="term-title">Shikko</h3>
+                        <p class="term-definition">Camminata in ginocchio. Movimento fondamentale eseguito in posizione seiza, sviluppa equilibrio e centratura.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Shite">
+                        <div class="term-kanji">仕手</div>
+                        <h3 class="term-title">Shite</h3>
+                        <p class="term-definition">Chi esegue la tecnica. Termine alternativo per Nage o Tori.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Shomen">
+                        <div class="term-kanji">正面</div>
+                        <h3 class="term-title">Shomen</h3>
+                        <p class="term-definition">Lato frontale, fronte. Indica un attacco diretto alla testa o il lato principale del dojo.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Shomenuchi">
+                        <div class="term-kanji">正面打ち</div>
+                        <h3 class="term-title">Shomenuchi</h3>
+                        <p class="term-definition">Colpo frontale alla testa. Attacco verticale diretto al centro della testa.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Suburi">
+                        <div class="term-kanji">素振り</div>
+                        <h3 class="term-title">Suburi</h3>
+                        <p class="term-definition">Esercizi individuali. Pratica solitaria di movimenti con armi per sviluppare tecnica e forza.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Suwari Waza">
+                        <div class="term-kanji">座技</div>
+                        <h3 class="term-title">Suwari Waza</h3>
+                        <p class="term-definition">Tecniche in ginocchio. Pratica dove entrambi i partner sono in posizione seiza.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- T -->
+            <div class="glossary-section" data-section="T">
+                <h2 class="section-letter">T</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Tachi Waza">
+                        <div class="term-kanji">立技</div>
+                        <h3 class="term-title">Tachi Waza</h3>
+                        <p class="term-definition">Tecniche in piedi. Pratica dove entrambi i partner sono in posizione eretta.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tai Sabaki">
+                        <div class="term-kanji">体捌き</div>
+                        <h3 class="term-title">Tai Sabaki</h3>
+                        <p class="term-definition">Movimento del corpo. Spostamento corporeo che permette di evitare un attacco e posizionarsi vantaggiosamente.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tanto">
+                        <div class="term-kanji">短刀</div>
+                        <h3 class="term-title">Tanto</h3>
+                        <p class="term-definition">Coltello corto. Arma tradizionale giapponese utilizzata nell'allenamento per tecniche di difesa da coltello.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tatami">
+                        <div class="term-kanji">畳</div>
+                        <h3 class="term-title">Tatami</h3>
+                        <p class="term-definition">Materassina. Superficie imbottita su cui si pratica, tradizionalmente stuoia giapponese.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Te">
+                        <div class="term-kanji">手</div>
+                        <h3 class="term-title">Te</h3>
+                        <p class="term-definition">Mano. Fondamentale per prese, colpi e controlli nelle tecniche di Aikido.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tegatana">
+                        <div class="term-kanji">手刀</div>
+                        <h3 class="term-title">Tegatana</h3>
+                        <p class="term-definition">Mano a sciabola. Mano aperta utilizzata come una lama, fondamentale per tagli e controlli.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tenkan">
+                        <div class="term-kanji">転換</div>
+                        <h3 class="term-title">Tenkan</h3>
+                        <p class="term-definition">Rotazione, girarsi. Movimento rotatorio fondamentale nell'Aikido, complementare all'Irimi.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tori">
+                        <div class="term-kanji">取り</div>
+                        <h3 class="term-title">Tori</h3>
+                        <p class="term-definition">Chi prende, chi esegue. Praticante che esegue la tecnica (sinonimo di Nage).</p>
+                    </div>
+                    <div class="glossary-term" data-term="Tsuki">
+                        <div class="term-kanji">突き</div>
+                        <h3 class="term-title">Tsuki</h3>
+                        <p class="term-definition">Pugno, attacco diretto. Colpo penetrante diretto verso il corpo dell'avversario.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- U -->
+            <div class="glossary-section" data-section="U">
+                <h2 class="section-letter">U</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Uchi">
+                        <div class="term-kanji">打ち</div>
+                        <h3 class="term-title">Uchi</h3>
+                        <p class="term-definition">Colpo, percussione. Attacco che colpisce piuttosto che afferrare.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Uke">
+                        <div class="term-kanji">受け</div>
+                        <h3 class="term-title">Uke</h3>
+                        <p class="term-definition">Chi riceve. Praticante che attacca e riceve la tecnica, ruolo fondamentale per l'apprendimento.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ukemi">
+                        <div class="term-kanji">受身</div>
+                        <h3 class="term-title">Ukemi</h3>
+                        <p class="term-definition">Caduta, ricezione. Arte di cadere in modo sicuro ed efficace, assorbendo l'impatto della proiezione.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ura">
+                        <div class="term-kanji">裏</div>
+                        <h3 class="term-title">Ura</h3>
+                        <p class="term-definition">Dietro, interno. Variante di una tecnica eseguita girando dietro l'avversario.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Ushiro">
+                        <div class="term-kanji">後ろ</div>
+                        <h3 class="term-title">Ushiro</h3>
+                        <p class="term-definition">Dietro, posteriore. Indica un attacco proveniente da dietro.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Y -->
+            <div class="glossary-section" data-section="Y">
+                <h2 class="section-letter">Y</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Yame">
+                        <div class="term-kanji">止め</div>
+                        <h3 class="term-title">Yame</h3>
+                        <p class="term-definition">Fermare, smettere. Comando per interrompere la pratica.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Yokomen">
+                        <div class="term-kanji">横面</div>
+                        <h3 class="term-title">Yokomen</h3>
+                        <p class="term-definition">Lato della testa. Area laterale del cranio.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Yokomenuchi">
+                        <div class="term-kanji">横面打ち</div>
+                        <h3 class="term-title">Yokomenuchi</h3>
+                        <p class="term-definition">Colpo laterale alla testa. Attacco diagonale diretto al lato della testa.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Yonkyo">
+                        <div class="term-kanji">四教</div>
+                        <h3 class="term-title">Yonkyo</h3>
+                        <p class="term-definition">Quarto principio. Tecnica di controllo che applica pressione su un punto nervoso del braccio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z -->
+            <div class="glossary-section" data-section="Z">
+                <h2 class="section-letter">Z</h2>
+                <div class="glossary-grid">
+                    <div class="glossary-term" data-term="Zanshin">
+                        <div class="term-kanji">残心</div>
+                        <h3 class="term-title">Zanshin</h3>
+                        <p class="term-definition">Mente/spirito rimanente. Stato di consapevolezza vigile che persiste dopo il completamento di una tecnica.</p>
+                    </div>
+                    <div class="glossary-term" data-term="Zarei">
+                        <div class="term-kanji">座礼</div>
+                        <h3 class="term-title">Zarei</h3>
+                        <p class="term-definition">Saluto in seiza. Inchino formale eseguito dalla posizione seduta in ginocchio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="no-results hidden">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="40" cy="40" r="30"/>
+                <line x1="62" y1="62" x2="80" y2="80"/>
+            </svg>
+            <h3>Nessun termine trovato</h3>
+            <p>Prova a modificare la tua ricerca o a selezionare una lettera diversa.</p>
+        </div>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" aria-label="Torna su">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Ki Aikido Prato</h4>
+                <p>Scuola di arti marziali a Prato, Toscana. Affiliata alla Ki no Kenkyukai Internationale.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Link Utili</h4>
+                <ul class="footer-nav">
+                    <li><a href="/esami/">Programma Esami</a></li>
+                    <li><a href="/ranking.html">Ranking</a></li>
+                    <li><a href="/glossario.html">Glossario</a></li>
+                    <li><a href="/contatti.html">Contatti</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contatti</h4>
+                <p><a href="mailto:info@kiaikidoprato.com">info@kiaikidoprato.com</a><br>Tel: <a href="tel:+393356909025">335 690 9025</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/js/main.js"></script>
+    <script>
+        // Glossary Filter and Search Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const letterBtns = document.querySelectorAll('.letter-btn');
+            const clearFilterBtn = document.getElementById('clearFilter');
+            const glossarySections = document.querySelectorAll('.glossary-section');
+            const glossaryTerms = document.querySelectorAll('.glossary-term');
+            const noResults = document.getElementById('noResults');
+            const scrollTopBtn = document.getElementById('scrollTop');
+
+            let activeFilter = null;
+
+            // Update disabled state of letter buttons
+            function updateLetterButtons() {
+                const availableLetters = new Set();
+                glossarySections.forEach(section => {
+                    const letter = section.getAttribute('data-section');
+                    availableLetters.add(letter);
+                });
+
+                letterBtns.forEach(btn => {
+                    const letter = btn.getAttribute('data-letter');
+                    if (!availableLetters.has(letter)) {
+                        btn.classList.add('disabled');
+                    }
+                });
+            }
+
+            // Filter by letter
+            function filterByLetter(letter) {
+                activeFilter = letter;
+                let hasVisibleTerms = false;
+
+                glossarySections.forEach(section => {
+                    const sectionLetter = section.getAttribute('data-section');
+                    if (sectionLetter === letter) {
+                        section.classList.remove('hidden');
+                        hasVisibleTerms = true;
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+
+                searchInput.value = '';
+                noResults.classList.toggle('hidden', hasVisibleTerms);
+
+                // Update active button
+                letterBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-letter') === letter);
+                });
+            }
+
+            // Search functionality
+            function performSearch(query) {
+                query = query.toLowerCase().trim();
+                let hasVisibleTerms = false;
+
+                if (query === '') {
+                    // Show all if no query
+                    glossarySections.forEach(section => section.classList.remove('hidden'));
+                    glossaryTerms.forEach(term => term.classList.remove('hidden'));
+                    noResults.classList.add('hidden');
+                    return;
+                }
+
+                glossarySections.forEach(section => {
+                    let sectionHasVisible = false;
+                    const terms = section.querySelectorAll('.glossary-term');
+
+                    terms.forEach(term => {
+                        const termName = term.getAttribute('data-term').toLowerCase();
+                        const termTitle = term.querySelector('.term-title').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('.term-definition').textContent.toLowerCase();
+
+                        if (termName.includes(query) || termTitle.includes(query) || termDefinition.includes(query)) {
+                            term.classList.remove('hidden');
+                            sectionHasVisible = true;
+                            hasVisibleTerms = true;
+                        } else {
+                            term.classList.add('hidden');
+                        }
+                    });
+
+                    section.classList.toggle('hidden', !sectionHasVisible);
+                });
+
+                noResults.classList.toggle('hidden', hasVisibleTerms);
+                activeFilter = null;
+                letterBtns.forEach(btn => btn.classList.remove('active'));
+            }
+
+            // Clear all filters
+            function clearFilters() {
+                activeFilter = null;
+                searchInput.value = '';
+                glossarySections.forEach(section => section.classList.remove('hidden'));
+                glossaryTerms.forEach(term => term.classList.remove('hidden'));
+                letterBtns.forEach(btn => btn.classList.remove('active'));
+                noResults.classList.add('hidden');
+            }
+
+            // Event listeners
+            searchInput.addEventListener('input', function() {
+                performSearch(this.value);
+            });
+
+            letterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+
+                    const letter = this.getAttribute('data-letter');
+                    if (activeFilter === letter) {
+                        clearFilters();
+                    } else {
+                        filterByLetter(letter);
+                    }
+                });
+            });
+
+            clearFilterBtn.addEventListener('click', clearFilters);
+
+            // Scroll to top button
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
+
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Initialize
+            updateLetterButtons();
+        });
+    </script>
+</body>
+</html>
+

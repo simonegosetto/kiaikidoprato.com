@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initScrollAnimations();
     initRanking();
+    initEvents();
 });
 
 // ===================================
@@ -314,6 +315,74 @@ function initRanking() {
 
     // Anima gli elementi quando appaiono
     initScrollAnimations();
+}
+
+// ===================================
+// Events Section
+// ===================================
+
+async function initEvents() {
+    const container = document.querySelector('.events-container');
+    if (!container) return;
+
+    try {
+        console.log('Caricamento eventi...');
+        const response = await fetch('/data/events.json');
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`Errore nel caricamento: ${response.status} ${response.statusText}`);
+        }
+
+        const events = await response.json();
+        console.log('Eventi caricati:', events);
+
+        // Filtra eventi futuri e ordina per data
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // Considera tutto il giorno di oggi come futuro
+
+        const futureEvents = events
+            .filter(event => new Date(event.date) >= now)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .slice(0, 5); // Mostra max 5 eventi
+
+        if (futureEvents.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--stone-gray); font-size: 1rem;">Nessun evento in programma al momento. Controlla più avanti per nuovi seminari e stage!</p>';
+            return;
+        }
+
+        container.innerHTML = futureEvents.map(event => {
+            const date = new Date(event.date);
+            const day = date.getDate();
+            const month = date.toLocaleDateString('it-IT', { month: 'short' });
+            const year = date.getFullYear();
+            const weekday = date.toLocaleDateString('it-IT', { weekday: 'long' });
+
+            return `
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-date-day">${day}</div>
+                        <div class="event-date-month">${month} ${year}</div>
+                    </div>
+                    <div class="event-info">
+                        <h3>${event.title}</h3>
+                        <p>${event.description}</p>
+                        <p class="event-details">
+                            <strong>📅 ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}</strong> ${event.time ? `• <strong>🕐 Orario:</strong> ${event.time}` : ''}<br>
+                            <strong>📍 Luogo:</strong> ${event.location}${event.organizer ? `<br><strong>👤 Insegnanti:</strong> ${event.organizer}` : ''}
+                        </p>
+                    </div>
+                    ${event.link ? `
+                    <div class="event-cta">
+                        <a href="${event.link}" class="btn btn-outline" target="_blank" rel="noopener">Maggiori Info</a>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Errore caricamento eventi:', error);
+        container.innerHTML = '<p style="text-align: center; color: var(--stone-gray);">Errore nel caricamento degli eventi. Riprova più tardi.</p>';
+    }
 }
 
 // ===================================
