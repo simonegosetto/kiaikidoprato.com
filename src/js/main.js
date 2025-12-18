@@ -350,7 +350,7 @@ async function initEvents() {
             return;
         }
 
-        container.innerHTML = futureEvents.map(event => {
+        container.innerHTML = futureEvents.map((event, index) => {
             const date = new Date(event.date);
             const day = date.getDate();
             const month = date.toLocaleDateString('it-IT', { month: 'short' });
@@ -358,27 +358,67 @@ async function initEvents() {
             const weekday = date.toLocaleDateString('it-IT', { weekday: 'long' });
 
             return `
-                <div class="event-card">
-                    <div class="event-date">
-                        <div class="event-date-day">${day}</div>
-                        <div class="event-date-month">${month} ${year}</div>
+                <div class="event-accordion ${event.image ? 'has-image' : ''}" data-event-id="${index}">
+                    <div class="event-accordion-header">
+                        <div class="event-date">
+                            <div class="event-date-day">${day}</div>
+                            <div class="event-date-month">${month} ${year}</div>
+                        </div>
+                        <div class="event-info">
+                            <h3>${event.title}</h3>
+                            <p class="event-details-short">
+                                📅 ${weekday.charAt(0).toUpperCase() + weekday.slice(1)} • 📍 ${event.location}
+                            </p>
+                        </div>
+                        ${event.image ? `
+                        <button class="event-toggle" aria-label="Mostra dettagli" aria-expanded="false">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        ` : ''}
                     </div>
-                    <div class="event-info">
-                        <h3>${event.title}</h3>
-                        <p>${event.description}</p>
-                        <p class="event-details">
-                            <strong>📅 ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}</strong> ${event.time ? `• <strong>🕐 Orario:</strong> ${event.time}` : ''}<br>
-                            <strong>📍 Luogo:</strong> ${event.location}${event.organizer ? `<br><strong>👤 Insegnanti:</strong> ${event.organizer}` : ''}
-                        </p>
+                    <div class="event-accordion-content">
+                        ${event.image ? `
+                        <div class="event-image-wrapper">
+                            <img src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                        </div>
+                        ` : ''}
+                        <div class="event-details-full">
+                            <p class="event-description">${event.description}</p>
+                            <div class="event-meta">
+                                <p><strong>🕐 Orario:</strong> ${event.time || 'Da definire'}</p>
+                                ${event.organizer ? `<p><strong>👤 Insegnanti:</strong> ${event.organizer}</p>` : ''}
+                            </div>
+                            ${event.link ? `
+                            <a href="${event.link}" class="btn btn-outline" target="_blank" rel="noopener">Maggiori Info</a>
+                            ` : ''}
+                        </div>
                     </div>
-                    ${event.link ? `
-                    <div class="event-cta">
-                        <a href="${event.link}" class="btn btn-outline" target="_blank" rel="noopener">Maggiori Info</a>
-                    </div>
-                    ` : ''}
                 </div>
             `;
         }).join('');
+
+        // Aggiungi event listeners per accordion
+        document.querySelectorAll('.event-toggle').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const accordion = button.closest('.event-accordion');
+                const isExpanded = accordion.classList.contains('active');
+
+                // Chiudi tutti gli altri accordion
+                document.querySelectorAll('.event-accordion.active').forEach(acc => {
+                    if (acc !== accordion) {
+                        acc.classList.remove('active');
+                        acc.querySelector('.event-toggle').setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Toggle questo accordion
+                accordion.classList.toggle('active');
+                button.setAttribute('aria-expanded', !isExpanded);
+            });
+        });
     } catch (error) {
         console.error('Errore caricamento eventi:', error);
         container.innerHTML = '<p style="text-align: center; color: var(--stone-gray);">Errore nel caricamento degli eventi. Riprova più tardi.</p>';

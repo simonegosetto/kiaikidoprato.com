@@ -408,24 +408,37 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
-        .event-card {
+        .event-accordion {
             background: var(--white);
             border-radius: 4px;
-            box-shadow: 0 4px 20px var(--deep-shadow);
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 100px 1fr auto;
-            gap: 2rem;
-            align-items: center;
-            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px var(--deep-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .event-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        .event-accordion:hover {
+            box-shadow: 0 4px 16px var(--deep-shadow);
+        }
+
+        .event-accordion.active {
+            box-shadow: 0 6px 24px rgba(199, 62, 29, 0.15);
+        }
+
+        .event-accordion-header {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .event-accordion.has-image .event-accordion-header:hover {
+            background: var(--light-cream);
         }
 
         .event-date {
@@ -444,46 +457,151 @@
 
         .event-date-month {
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--stone-gray);
             letter-spacing: 0.1em;
+            margin-top: 0.25rem;
         }
 
         .event-info h3 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
             font-weight: 500;
-        }
-
-        .event-info p {
-            color: var(--stone-gray);
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-info .event-details {
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .event-info .event-details strong {
             color: var(--ink-black);
         }
 
-        .event-cta {
+        .event-details-short {
+            color: var(--stone-gray);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .event-toggle {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--paper-cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
             flex-shrink: 0;
         }
 
+        .event-toggle:hover {
+            background: var(--vermillion);
+            color: var(--white);
+        }
+
+        .event-toggle svg {
+            transition: transform 0.3s ease;
+        }
+
+        .event-accordion.active .event-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        .event-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .event-accordion.active .event-accordion-content {
+            max-height: 2000px;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .event-image-wrapper {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--deep-shadow);
+        }
+
+        .event-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .event-image-wrapper:hover img {
+            transform: scale(1.02);
+        }
+
+        .event-details-full {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .event-description {
+            color: var(--ink-black);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .event-meta {
+            background: var(--light-cream);
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .event-meta p {
+            margin: 0.5rem 0;
+            color: var(--stone-gray);
+            font-size: 0.95rem;
+        }
+
+        .event-meta strong {
+            color: var(--ink-black);
+        }
+
+        .event-details-full .btn {
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
         @media (max-width: 768px) {
-            .event-card {
-                grid-template-columns: 80px 1fr;
+            .event-accordion-header {
+                grid-template-columns: 80px 1fr auto;
                 gap: 1rem;
-                padding: 1.5rem;
+                padding: 1.25rem;
             }
 
-            .event-cta {
-                grid-column: 2;
-                margin-top: 1rem;
+            .event-date {
+                padding: 0.75rem;
+            }
+
+            .event-date-day {
+                font-size: 2rem;
+            }
+
+            .event-info h3 {
+                font-size: 1.1rem;
+            }
+
+            .event-details-short {
+                font-size: 0.85rem;
+            }
+
+            .event-toggle {
+                width: 36px;
+                height: 36px;
+            }
+
+            .event-accordion.active .event-accordion-content {
+                padding: 0 1.25rem 1.25rem;
+            }
+
+            .event-image-wrapper {
+                max-width: 100%;
             }
         }
     </style>
@@ -667,6 +785,6 @@
             <p>&copy; 2024 Ki-Aikido Prato. Tutti i diritti riservati.</p>
         </div>
     </footer>
-    <script src="/js/main.js" defer></script>
+    <script src="/js/main.js?v=2.0" defer></script>
 </body>
 </html>
