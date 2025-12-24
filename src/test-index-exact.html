@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test REALE Index.html - Hamburger</title>
+
+    <!-- EXACT COPY from index.html -->
+    <style>
+        :root{--ink-black:#1a1a1a;--paper-cream:#f5f0e8;--vermillion:#c73e1d;--white:#fff}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--paper-cream);color:var(--ink-black);min-height:100vh;line-height:1.6;overflow-x:hidden}
+        /* Mobile Navigation Critical Styles - FORCED */
+        .main-nav{z-index:1000 !important}
+        .nav-toggle{display:none !important;flex-direction:column !important;gap:5px !important;background:none !important;border:none !important;cursor:pointer !important;padding:0.5rem !important;z-index:1001 !important;position:relative !important}
+        .nav-toggle span{display:block !important;width:24px !important;height:2px !important;background:var(--ink-black) !important;transition:all 0.3s ease !important}
+        @media (max-width:768px){
+            .nav-toggle{display:flex !important}
+            .nav-menu{position:fixed !important;top:0 !important;right:-100% !important;width:280px !important;height:100vh !important;background:var(--paper-cream) !important;flex-direction:column !important;padding:5rem 2rem 2rem !important;gap:0 !important;box-shadow:-4px 0 20px rgba(26,26,26,0.15) !important;transition:right 0.4s ease !important;z-index:999 !important}
+            .nav-menu.active{right:0 !important}
+            .nav-menu a{padding:1rem !important;border-bottom:1px solid rgba(26,26,26,0.08) !important}
+            .nav-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px) !important}
+            .nav-toggle.active span:nth-child(2){opacity:0 !important}
+            .nav-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px) !important}
+        }
+    </style>
+
+    <!-- SIMULATING CSS LOAD -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- OVERRIDE FINALE - Mobile Navigation FORZATO -->
+    <style>
+        /* MASSIMA PRIORITÀ - Hamburger Menu Mobile */
+        .main-nav{z-index:9999 !important;position:fixed !important}
+        .nav-toggle{display:none !important;flex-direction:column !important;gap:5px !important;background:none !important;border:none !important;cursor:pointer !important;padding:0.5rem !important;z-index:10000 !important;position:relative !important;width:40px !important;height:40px !important}
+        .nav-toggle span{display:block !important;width:24px !important;height:2px !important;background:var(--ink-black) !important;transition:all 0.3s ease !important;pointer-events:none !important}
+        @media (max-width:768px){
+            .nav-toggle{display:flex !important;visibility:visible !important;opacity:1 !important}
+            .nav-menu{position:fixed !important;top:0 !important;right:-100% !important;width:280px !important;height:100vh !important;background:var(--paper-cream) !important;flex-direction:column !important;padding:5rem 2rem 2rem !important;gap:0 !important;box-shadow:-4px 0 20px rgba(26,26,26,0.15) !important;transition:right 0.4s ease !important;z-index:9998 !important}
+            .nav-menu.active{right:0 !important}
+            .nav-menu a{padding:1rem !important;border-bottom:1px solid rgba(26,26,26,0.08) !important}
+            .nav-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px) !important}
+            .nav-toggle.active span:nth-child(2){opacity:0 !important}
+            .nav-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px) !important}
+        }
+    </style>
+
+    <style>
+        body{padding-top:80px}
+        .test-zone{padding:20px;background:white;margin:20px;border:2px solid red}
+        .main-nav{background:linear-gradient(180deg,var(--paper-cream) 0%,rgba(245,240,232,0.98) 80%,rgba(245,240,232,0) 100%);display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;top:0;left:0;width:100%}
+        .nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none;color:var(--ink-black)}
+        .nav-logo-text{font-size:1.1rem;font-weight:500}
+        .nav-menu{display:flex;gap:0.5rem;list-style:none}
+        .nav-menu a{display:inline-block;padding:0.5rem 1rem;color:var(--ink-black);font-size:0.85rem;text-decoration:none}
+    </style>
+</head>
+<body>
+    <!-- EXACT COPY from index.html -->
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <span class="nav-logo-text">Ki-Aikido Prato</span>
+        </a>
+        <button class="nav-toggle" aria-label="Menu" id="navToggleBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="/esami/">Esami</a></li>
+            <li><a href="/ranking.html">Ranking</a></li>
+            <li><a href="/glossario.html">Glossario</a></li>
+            <li><a href="/contatti.html">Contatti</a></li>
+        </ul>
+    </nav>
+
+    <div class="test-zone">
+        <h1>🔴 TEST REALE INDEX.HTML</h1>
+        <p><strong>Questo è un clone ESATTO dell'index.html</strong></p>
+        <p><strong>Larghezza:</strong> <span id="width"></span>px</p>
+        <p><strong>Display .nav-toggle:</strong> <span id="display"></span></p>
+        <p><strong>Visibility:</strong> <span id="visibility"></span></p>
+        <p><strong>Opacity:</strong> <span id="opacity"></span></p>
+        <p><strong>Z-index:</strong> <span id="zindex"></span></p>
+        <p><strong>Position:</strong> <span id="position"></span></p>
+
+        <div id="result" style="margin-top:20px;padding:15px;font-weight:bold"></div>
+
+        <h2>Cosa fare:</h2>
+        <ol>
+            <li>Riduci la finestra a meno di 768px</li>
+            <li>L'hamburger DEVE apparire</li>
+            <li>Clicca per aprire il menu</li>
+        </ol>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('navToggleBtn');
+        const menu = document.getElementById('navMenu');
+
+        // Toggle function
+        toggle.addEventListener('click', function() {
+            console.log('Click hamburger!');
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // Debug
+        function updateDebug() {
+            const w = window.innerWidth;
+            const style = window.getComputedStyle(toggle);
+
+            document.getElementById('width').textContent = w;
+            document.getElementById('display').textContent = style.display;
+            document.getElementById('visibility').textContent = style.visibility;
+            document.getElementById('opacity').textContent = style.opacity;
+            document.getElementById('zindex').textContent = style.zIndex;
+            document.getElementById('position').textContent = style.position;
+
+            const result = document.getElementById('result');
+
+            if (w <= 768) {
+                if (style.display === 'flex') {
+                    result.style.background = '#4CAF50';
+                    result.style.color = 'white';
+                    result.textContent = '✅ PERFETTO! Hamburger visibile su mobile!';
+                } else {
+                    result.style.background = '#f44336';
+                    result.style.color = 'white';
+                    result.textContent = '❌ ERRORE! Hamburger NON visibile! Display: ' + style.display;
+                }
+            } else {
+                result.style.background = '#2196F3';
+                result.style.color = 'white';
+                result.textContent = '📱 Riduci la finestra sotto 768px per testare';
+            }
+        }
+
+        updateDebug();
+        window.addEventListener('resize', updateDebug);
+        setInterval(updateDebug, 500);
+    </script>
+</body>
+</html>
+

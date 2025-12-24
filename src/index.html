@@ -74,6 +74,8 @@
     <!-- Caricamento asincrono CSS principale -->
     <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+
+
     <style>
         /* Hero Section */
         .hero {
@@ -86,6 +88,10 @@
             padding: 2rem;
             position: relative;
             overflow: hidden;
+            background-image: url('img/hero.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
         }
 
         .hero::before {
@@ -95,7 +101,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, transparent 0%, var(--paper-cream) 70%);
+            background: radial-gradient(ellipse at center, rgba(245, 240, 232, 0.7) 0%, var(--paper-cream) 70%);
             z-index: 1;
         }
 
@@ -664,29 +670,29 @@
     <!-- Philosophy Section -->
     <section class="section-home">
         <div class="section-header">
-            <h2>I Quattro Principi</h2>
-            <p>Il Ki-Aikido si fonda su quattro principi fondamentali che guidano la pratica e la vita quotidiana.</p>
+            <h2>L'Insegnamento di Yoshigasaki</h2>
+            <p>Kenjiro Yoshigasaki, fondatore della Ki no Kenkyukai Internationale, ha sviluppato un approccio unico che integra filosofia, scienza e pratica.</p>
         </div>
         <div class="philosophy-grid stagger-children">
             <div class="philosophy-card">
-                <div class="philosophy-kanji">一</div>
-                <h3>Mantieni il Punto</h3>
-                <p>Trova stabilità portando l'attenzione nel centro del corpo (basso ventre). Come un albero con radici profonde che non viene abbattuto dal vento.</p>
+                <div class="philosophy-kanji">心</div>
+                <h3>Mente e Corpo Unificati</h3>
+                <p>Non esiste separazione tra mente e corpo. Quando agisci con questa consapevolezza, il Ki fluisce naturalmente e ogni movimento diventa efficace ed elegante.</p>
             </div>
             <div class="philosophy-card">
-                <div class="philosophy-kanji">二</div>
-                <h3>Rilassati Completamente</h3>
-                <p>Elimina le tensioni inutili dal corpo. Come quando lasci cadere le spalle dopo una lunga giornata: sei più forte quando sei rilassato.</p>
+                <div class="philosophy-kanji">理</div>
+                <h3>Principi Universali</h3>
+                <p>Il Ki-Aikido non è solo tecnica marziale, ma studio di principi che si applicano alla vita quotidiana. Comprendere il "perché" rende la pratica significativa.</p>
             </div>
             <div class="philosophy-card">
-                <div class="philosophy-kanji">三</div>
-                <h3>Peso Sotto</h3>
-                <p>Mantieni il baricentro basso e radicato a terra. Pensa a come un bambino piccolo è difficile da spostare quando gioca seduto per terra.</p>
+                <div class="philosophy-kanji">和</div>
+                <h3>Non-Resistenza</h3>
+                <p>Non opporsi alla forza ma guidarla. Come l'acqua che scorre intorno agli ostacoli, impariamo a trasformare il conflitto in armonia senza scontro diretto.</p>
             </div>
             <div class="philosophy-card">
-                <div class="philosophy-kanji">四</div>
-                <h3>Estendi il Ki</h3>
-                <p>Proietta la tua intenzione e presenza in ogni direzione. Come quando allunghi un braccio per indicare qualcosa in lontananza, con naturalezza.</p>
+                <div class="philosophy-kanji">成</div>
+                <h3>Crescita Continua</h3>
+                <p>La pratica è un viaggio senza fine. Ogni lezione offre nuove scoperte su di sé. Non si cerca la perfezione, ma il miglioramento costante e consapevole.</p>
             </div>
         </div>
     </section>
@@ -765,7 +771,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>Ki-Aikido Prato</h4>
-                <p>Scuola di arti marziali a Prato, Toscana. Affiliata alla Ki no Kenkyukai Internationale.</p>
+                <p>Scuola di arti marziali a Prato, Toscana. Affiliata alla <a href="https://knkitalia.it/" target="_blank" rel="noopener noreferrer" style="color: var(--vermillion); text-decoration: none;">Ki no Kenkyukai Italia</a>.</p>
             </div>
             <div class="footer-section">
                 <h4>Link Utili</h4>

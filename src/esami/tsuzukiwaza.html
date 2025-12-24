@@ -102,10 +102,29 @@
 
         /* Header */
         header {
-            position: relative;
+            position: relative !important;
             padding: 6rem 2rem 3rem;
             text-align: center;
-            background: linear-gradient(180deg, var(--paper-cream) 0%, rgba(245, 240, 232, 0) 100%);
+            background-image: url('../img/hero.png') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+        }
+
+        header::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: radial-gradient(ellipse at center, rgba(245, 240, 232, 0.85) 0%, var(--paper-cream) 70%) !important;
+            z-index: 0 !important;
+        }
+
+        .enso, h1, .subtitle, .divider {
+            position: relative !important;
+            z-index: 1 !important;
         }
 
         .enso {
@@ -929,7 +948,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>Ki-Aikido Prato</h4>
-                <p>Scuola di arti marziali a Prato, Toscana. Affiliata alla Ki no Kenkyukai Internationale.</p>
+                <p>Scuola di arti marziali a Prato, Toscana. Affiliata alla <a href="https://knkitalia.it/" target="_blank" rel="noopener noreferrer" style="color: var(--vermillion); text-decoration: none;">Ki no Kenkyukai Italia</a>.</p>
             </div>
             <div class="footer-section">
                 <h4>Link Utili</h4>
