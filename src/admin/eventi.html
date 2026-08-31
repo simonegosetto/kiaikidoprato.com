@@ -8,6 +8,14 @@
     <meta name="referrer" content="no-referrer">
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
 
+    <!-- Preconnect per Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Caricamento asincrono dei font (stessi weights del sito pubblico) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap"></noscript>
+
     <!-- Critical CSS inline: la pagina deve essere usabile anche prima che arrivi style.css -->
     <style>
         :root{
@@ -106,13 +114,13 @@
         .events-admin-list{display:flex;flex-direction:column;gap:1rem}
         .event-row{background:var(--white);border-radius:4px;box-shadow:0 2px 12px var(--deep-shadow);padding:1.15rem;border-left:4px solid var(--vermillion)}
         .event-row.is-draft{border-left-color:var(--gold-accent)}
-        .event-row.is-past{border-left-color:var(--light-gray);opacity:0.85}
+        .event-row.is-past{border-left-color:var(--light-gray);background:#fbfaf8}
         .event-row-badges{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.5rem}
         .badge{display:inline-block;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:0.22rem 0.55rem;border-radius:2px}
         .badge-type{background:rgba(26,26,26,0.06);color:var(--stone-gray)}
         .badge-draft{background:var(--gold-accent);color:var(--ink-black)}
         .badge-published{background:rgba(76,175,80,0.15);color:var(--success-green)}
-        .badge-past{background:rgba(26,26,26,0.08);color:var(--stone-gray)}
+        .badge-past{background:rgba(26,26,26,0.08);color:#595959}
         .event-row-title{font-size:1.1rem;font-weight:600;line-height:1.4;margin-bottom:0.3rem}
         .event-row-date{font-size:0.95rem;color:var(--vermillion);font-weight:600;margin-bottom:0.25rem}
         .event-row-meta{font-size:0.85rem;color:var(--stone-gray);margin-bottom:0.2rem}
@@ -196,7 +204,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-lg" id="loginSubmit">Entra</button>
                 </form>
-                <p class="admin-alert admin-alert-error" id="loginError" hidden></p>
+                <p class="admin-alert admin-alert-error" id="loginError" role="alert" hidden></p>
             </div>
         </section>
 
@@ -210,7 +218,7 @@
                     <button type="button" class="btn btn-outline btn-sm" id="btnLogout">Esci</button>
                 </div>
             </div>
-            <p class="admin-status" id="listStatus" hidden></p>
+            <p class="admin-status" id="listStatus" role="status" aria-live="polite" hidden></p>
             <div class="events-admin-list" id="eventsList"></div>
         </section>
 
@@ -225,7 +233,7 @@
                 <form id="eventForm" novalidate>
                     <div class="form-group">
                         <label class="form-label" for="fTitle">Titolo <span class="obbligatorio">*</span></label>
-                        <input type="text" id="fTitle" class="form-input" maxlength="180" autocapitalize="sentences">
+                        <input type="text" id="fTitle" class="form-input" maxlength="200" autocapitalize="sentences">
                         <p class="field-help">Il nome dell'evento, come vuoi che si legga sul sito. Esempio: "Seminario di Ki-Aikido con Sensei Rossi".</p>
                         <p class="field-error" id="errTitle" hidden></p>
                     </div>
@@ -254,21 +262,21 @@
 
                     <div class="form-group">
                         <label class="form-label" for="fLocation">Luogo</label>
-                        <input type="text" id="fLocation" class="form-input" maxlength="180" placeholder="Palestra Shiro Saigo, Prato">
+                        <input type="text" id="fLocation" class="form-input" maxlength="250" placeholder="Palestra Shiro Saigo, Prato">
                         <p class="field-help">Dove si svolge: nome della palestra, indirizzo o città.</p>
                         <p class="field-error" id="errLocation" hidden></p>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="fDescription">Descrizione</label>
-                        <textarea id="fDescription" class="form-textarea" maxlength="3000"></textarea>
+                        <textarea id="fDescription" class="form-textarea" maxlength="4000"></textarea>
                         <p class="field-help">Qualche riga per raccontare l'evento: programma, quote, a chi è rivolto, come iscriversi.</p>
                         <p class="field-error" id="errDescription" hidden></p>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="fOrganizer">Insegnanti / Organizzatore</label>
-                        <input type="text" id="fOrganizer" class="form-input" maxlength="180" placeholder="Sensei Mario Rossi">
+                        <input type="text" id="fOrganizer" class="form-input" maxlength="250" placeholder="Sensei Mario Rossi">
                         <p class="field-help">Chi conduce l'evento oppure chi lo organizza.</p>
                         <p class="field-error" id="errOrganizer" hidden></p>
                     </div>
@@ -287,14 +295,14 @@
 
                     <div class="form-group">
                         <label class="form-label" for="fLink">Link per maggiori informazioni</label>
-                        <input type="url" id="fLink" class="form-input" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://...">
+                        <input type="url" id="fLink" class="form-input" maxlength="600" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://...">
                         <p class="field-help">Indirizzo di una pagina o di un volantino online. Deve iniziare con http:// oppure https:// . Lascia vuoto se non c'è.</p>
                         <p class="field-error" id="errLink" hidden></p>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="fImage">Immagine / locandina</label>
-                        <input type="url" id="fImage" class="form-input" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://...">
+                        <input type="url" id="fImage" class="form-input" maxlength="600" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="https://...">
                         <p class="field-help">Indirizzo internet dell'immagine (deve iniziare con http:// oppure https:// ). Qui non si possono caricare file dal telefono: l'immagine va prima messa online.</p>
                         <p class="field-error" id="errImage" hidden></p>
                         <div class="image-preview" id="imagePreview" hidden>
@@ -313,7 +321,7 @@
                         </div>
                     </div>
 
-                    <p class="admin-alert admin-alert-error" id="formError" hidden></p>
+                    <p class="admin-alert admin-alert-error" id="formError" role="alert" hidden></p>
 
                     <div class="form-actions">
                         <button type="button" class="btn btn-outline" id="btnCancel">Annulla</button>
@@ -330,7 +338,7 @@
             <h3 id="deleteModalHeading">Vuoi eliminare questo evento?</h3>
             <p>Stai per eliminare: <strong id="deleteModalName"></strong></p>
             <p class="field-help">L'evento sparirà dal sito e da questo elenco. L'operazione non si può annullare.</p>
-            <p class="admin-alert admin-alert-error" id="deleteError" hidden></p>
+            <p class="admin-alert admin-alert-error" id="deleteError" role="alert" hidden></p>
             <div class="admin-modal-actions">
                 <button type="button" class="btn btn-outline" id="btnDeleteCancel">No, torna indietro</button>
                 <button type="button" class="btn btn-danger-solid" id="btnDeleteConfirm">Sì, elimina</button>

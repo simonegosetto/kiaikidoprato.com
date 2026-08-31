@@ -459,6 +459,9 @@ function renderEvents(container, events) {
         const title = escapeHtml(event.title);
         const imageUrl = safeExternalUrl(event.image);
         const linkUrl = safeExternalUrl(event.link);
+        // Luogo e descrizione possono arrivare vuoti dal foglio: in quel caso non emettiamo il markup
+        const location = event.location === null || event.location === undefined ? '' : String(event.location).trim();
+        const description = event.description === null || event.description === undefined ? '' : String(event.description).trim();
 
         return `
             <div class="event-accordion ${imageUrl ? 'has-image' : ''}" data-event-id="${index}">
@@ -470,16 +473,14 @@ function renderEvents(container, events) {
                     <div class="event-info">
                         <h3>${title}</h3>
                         <p class="event-details-short">
-                            📅 ${escapeHtml(whenLabel)} • 📍 ${escapeHtml(event.location)}
+                            📅 ${escapeHtml(whenLabel)}${location ? ` • 📍 ${escapeHtml(location)}` : ''}
                         </p>
                     </div>
-                    ${imageUrl ? `
                     <button class="event-toggle" aria-label="Mostra dettagli" aria-expanded="false">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
-                    ` : ''}
                 </div>
                 <div class="event-accordion-content">
                     ${imageUrl ? `
@@ -488,7 +489,7 @@ function renderEvents(container, events) {
                     </div>
                     ` : ''}
                     <div class="event-details-full">
-                        <p class="event-description">${escapeHtml(event.description)}</p>
+                        ${description ? `<p class="event-description">${escapeHtml(description)}</p>` : ''}
                         <div class="event-meta">
                             ${isMultiDay ? `<p><strong>📆 Date:</strong> ${escapeHtml(whenLabel)}</p>` : ''}
                             <p><strong>🕐 Orario:</strong> ${escapeHtml(event.time || 'Da definire')}</p>
@@ -550,10 +551,16 @@ async function initEvents() {
         const payload = await response.json();
 
         if (!payload || payload.ok !== true) {
-            const message = payload && payload.error
-                ? payload.error
-                : 'Errore nel caricamento degli eventi. Riprova più tardi.';
-            showEventsMessage(container, message);
+            // Errore lato Apps Script: resta un problema tecnico, non un messaggio per i visitatori
+            console.warn('Eventi: risposta non valida',
+                payload && payload.code ? payload.code : 'unknown',
+                payload && payload.error ? payload.error : '');
+            if (renderedEvents) return;
+            if (cached) {
+                renderEvents(container, cached.events);
+                return;
+            }
+            showEventsMessage(container, 'Errore nel caricamento degli eventi. Riprova più tardi.');
             return;
         }
 

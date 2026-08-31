@@ -41,9 +41,10 @@ var TIMEZONE = 'Europe/Rome';
 var HEADERS = ['id', 'title', 'date', 'dateEnd', 'time', 'location', 'description',
                'organizer', 'link', 'type', 'image', 'published', 'updatedAt'];
 
-var COL_DATE = 3;       // colonna C
-var COL_DATE_END = 4;   // colonna D
-var COL_UPDATED_AT = 13;// colonna M
+// Colonne testuali contigue: da A (id) a K (image); L (published) resta booleana.
+var COL_TESTO_INIZIO = 1;   // colonna A
+var COL_TESTO_QUANTE = 11;  // A..K
+var COL_UPDATED_AT = 13;    // colonna M
 
 var TIPI_AMMESSI = ['seminario', 'stage', 'esame', 'evento'];
 var TIPO_DEFAULT = 'evento';
@@ -266,32 +267,65 @@ function confrontoCostante_(a, b) {
 
 /**
  * Restituisce null se il token e valido, altrimenti la risposta di errore
- * (UNAUTHORIZED oppure RATE_LIMIT). Il contatore si azzera al login corretto.
+ * (UNAUTHORIZED oppure RATE_LIMIT).
+ * Il token viene verificato PRIMA di guardare il contatore: il contatore
+ * rallenta soltanto i tentativi falliti e non puo mai bloccare chi conosce la
+ * password (altrimenti chiunque, sparando password sbagliate, chiuderebbe
+ * fuori gli istruttori). Il contatore vive nella cache di script, quindi e
+ * globale: incremento e lettura avvengono sotto lock di script per non essere
+ * aggirabili con richieste concorrenti. Se il lock non si ottiene si prosegue
+ * comunque: meglio un conteggio imperfetto che un istruttore chiuso fuori.
  */
 function autorizza_(token) {
     var cache = CacheService.getScriptCache();
-    var tentativi = parseInt(cache.get(CHIAVE_TENTATIVI) || '0', 10);
-    if (isNaN(tentativi) || tentativi < 0) { tentativi = 0; }
+    var lock = LockService.getScriptLock();
+    var bloccato = false;
+    try { bloccato = lock.tryLock(LOCK_TIMEOUT_MS); } catch (ignora) { bloccato = false; }
 
-    if (tentativi >= MAX_TENTATIVI) {
-        return jsonErr_('RATE_LIMIT', 'Troppi tentativi di accesso non validi. Attendi qualche minuto e riprova.');
-    }
+    try {
+        // 1) Password corretta: contatore azzerato e accesso consentito SEMPRE.
+        if (checkToken_(token)) {
+            cache.remove(CHIAVE_TENTATIVI);
+            return null;
+        }
 
-    if (!checkToken_(token)) {
-        cache.put(CHIAVE_TENTATIVI, String(tentativi + 1), FINESTRA_TENTATIVI_SEC);
+        // 2) Password sbagliata: incrementa e decidi in base alla soglia.
+        var tentativi = parseInt(cache.get(CHIAVE_TENTATIVI) || '0', 10);
+        if (isNaN(tentativi) || tentativi < 0) { tentativi = 0; }
+        tentativi += 1;
+        cache.put(CHIAVE_TENTATIVI, String(tentativi), FINESTRA_TENTATIVI_SEC);
+
+        if (tentativi >= MAX_TENTATIVI) {
+            return jsonErr_('RATE_LIMIT', 'Troppi tentativi di accesso non validi. Attendi qualche minuto e riprova.');
+        }
         return jsonErr_('UNAUTHORIZED', 'Password non valida.');
+    } finally {
+        // Rilasciato prima del return: nessun deadlock con conLock_().
+        if (bloccato) { lock.releaseLock(); }
     }
-
-    cache.remove(CHIAVE_TENTATIVI);
-    return null;
 }
 
 /* =============================== FOGLIO =============================== */
 
 /**
- * Apre (o crea) il foglio "Eventi", garantisce le intestazioni, congela la
- * riga 1 e forza a testo semplice le colonne delle date, cosi Sheets non le
- * converte in oggetti Date.
+ * Apre il foglio "Eventi" in SOLA LETTURA: nessuna scrittura, cosi le GET
+ * pubbliche non generano voci nella cronologia versioni ne corrono con i
+ * salvataggi degli istruttori. Ritorna null se il foglio non esiste ancora
+ * (setup() mai eseguito).
+ */
+function getSheet_() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    if (!ss) {
+        throw errore_('SERVER', 'Script non collegato a nessun Google Sheet.');
+    }
+    return ss.getSheetByName(SHEET_NAME);
+}
+
+/**
+ * Setup/scrittura (da usare solo nei percorsi che scrivono): apre o crea il
+ * foglio "Eventi", garantisce le intestazioni, congela la riga 1 e forza a
+ * testo semplice tutte le colonne testuali, cosi Sheets non converte date,
+ * orari ("15:00") o numeri ("9.30") in valori tipizzati.
  */
 function ensureSheet_() {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -308,6 +342,13 @@ function ensureSheet_() {
         sheet.insertColumnsAfter(sheet.getMaxColumns(), HEADERS.length - sheet.getMaxColumns());
     }
 
+    // Se sono state eliminate tutte le righe dati resta solo l'intestazione:
+    // ripristina la griglia, altrimenti setFrozenRows(1) e la formattazione
+    // fallirebbero a ogni richiesta.
+    if (sheet.getMaxRows() < 2) {
+        sheet.insertRowsAfter(1, 100);
+    }
+
     var intestazioni = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
     var daScrivere = false;
     for (var i = 0; i < HEADERS.length; i++) {
@@ -321,9 +362,11 @@ function ensureSheet_() {
         sheet.setFrozenRows(1);
     }
 
-    // Date come testo semplice ("@") per evitare conversioni automatiche.
-    var righeDati = Math.max(sheet.getMaxRows() - 1, 1);
-    sheet.getRange(2, COL_DATE, righeDati, 2).setNumberFormat('@');
+    // Tutte le colonne testuali come testo semplice ("@") per evitare
+    // conversioni automatiche: A..K (id..image) e M (updatedAt). Fuori solo
+    // L (published), che resta booleana.
+    var righeDati = sheet.getMaxRows() - 1;
+    sheet.getRange(2, COL_TESTO_INIZIO, righeDati, COL_TESTO_QUANTE).setNumberFormat('@');
     sheet.getRange(2, COL_UPDATED_AT, righeDati, 1).setNumberFormat('@');
 
     return sheet;
@@ -333,7 +376,9 @@ function ensureSheet_() {
  * Legge il foglio e mappa le righe su oggetti Event normalizzati.
  */
 function readEvents_() {
-    var sheet = ensureSheet_();
+    var sheet = getSheet_();
+    // Foglio non ancora creato (prima di setup()): lista vuota, non un errore.
+    if (!sheet) { return []; }
     var ultimaRiga = sheet.getLastRow();
     if (ultimaRiga < 2) { return []; }
 
@@ -572,6 +617,11 @@ function normalizzaData_(valore) {
     var testo = String(valore).trim();
     var m = /^(\d{4}-\d{2}-\d{2})/.exec(testo);   // taglia eventuale parte orario
     if (m) { return m[1]; }
+    // ISO senza zeri iniziali scritto a mano nel foglio ("2026-2-15").
+    var iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(testo);
+    if (iso) {
+        return iso[1] + '-' + due_(iso[2]) + '-' + due_(iso[3]);
+    }
     // Formato italiano GG/MM/AAAA scritto a mano nel foglio.
     var it = /^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})$/.exec(testo);
     if (it) {

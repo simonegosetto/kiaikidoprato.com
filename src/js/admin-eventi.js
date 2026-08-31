@@ -31,7 +31,8 @@ const state = {
     eventi: [],
     idInModifica: null,
     eventoDaEliminare: null,
-    timerFlash: null
+    timerFlash: null,
+    formSporco: false
 };
 
 document.addEventListener('DOMContentLoaded', init);
@@ -84,6 +85,16 @@ function collegaEventi() {
         anteprima.hidden = true;
         el('imagePreviewLabel').textContent = 'Non riesco a caricare questa immagine: controlla che l\'indirizzo sia giusto.';
     });
+
+    // Modifiche non salvate: serve alla conferma su "Annulla"
+    CAMPI_INPUT.forEach((id) => {
+        const campo = el(id);
+        if (!campo) return;
+        campo.addEventListener('input', segnaFormSporco);
+        campo.addEventListener('change', segnaFormSporco);
+    });
+    // La checkbox Pubblicato non fa parte di CAMPI_INPUT
+    el('fPublished').addEventListener('change', segnaFormSporco);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !el('deleteModal').hidden) chiudiConfermaEliminazione();
@@ -262,7 +273,8 @@ function messaggioErrore(payload, contesto) {
             : 'La password non è più valida o la sessione è scaduta: inseriscila di nuovo.';
     }
     if (codice === 'RATE_LIMIT') {
-        return 'Troppi tentativi uno dopo l\'altro. Aspetta un paio di minuti e riprova.';
+        return 'Dopo 10 password sbagliate l\'accesso si blocca per circa 15 minuti e poi si riapre da solo, '
+            + 'quindi la password non è cambiata: aspetta e riprova (il blocco vale per tutti gli istruttori).';
     }
     if (codice === 'NOT_FOUND') {
         return 'Questo evento non esiste più: forse lo ha già eliminato qualcun altro. Premi "Aggiorna elenco".';
@@ -278,8 +290,8 @@ function gestisciSessioneScaduta(payload) {
     state.eventi = [];
     mostraSchermata('login');
     bloccaLogin('');
-    el('loginError').textContent = messaggioErrore(payload, 'sessione');
     el('loginError').hidden = false;
+    el('loginError').textContent = messaggioErrore(payload, 'sessione');
     el('loginPassword').value = '';
     el('loginPassword').focus();
 }
@@ -319,16 +331,16 @@ function mostraStatoElenco(messaggio) {
         box.textContent = '';
         return;
     }
-    box.textContent = messaggio;
     box.hidden = false;
+    box.textContent = messaggio;
 }
 
 // Usata quando manca la configurazione: l'accesso non può funzionare
 function bloccaLogin(messaggio) {
     const errore = el('loginError');
     if (messaggio) {
-        errore.textContent = messaggio;
         errore.hidden = false;
+        errore.textContent = messaggio;
         el('loginSubmit').disabled = true;
         el('loginPassword').disabled = true;
     } else {
@@ -373,8 +385,8 @@ async function gestisciLogin(e) {
     bottone.textContent = 'Entra';
 
     if (!payload || payload.ok !== true) {
-        erroreBox.textContent = messaggioErrore(payload, 'login');
         erroreBox.hidden = false;
+        erroreBox.textContent = messaggioErrore(payload, 'login');
         campo.classList.add('is-invalid');
         campo.select();
         return;
@@ -421,8 +433,10 @@ async function caricaEventi() {
             gestisciSessioneScaduta(payload);
             return;
         }
-        mostraStatoElenco('');
-        mostraFlash(messaggioErrore(payload, 'elenco'), 'error');
+        const motivo = messaggioErrore(payload, 'elenco');
+        mostraFlash(motivo, 'error');
+        mostraStatoElenco('Non ho caricato l\'elenco degli eventi. ' + motivo
+            + ' Quando vuoi riprovare premi "Aggiorna elenco".');
         return;
     }
 
@@ -548,12 +562,25 @@ function apriForm(evento) {
 
     el('fPublished').checked = evento ? (evento.published === true || evento.published === 'true') : true;
 
+    // I campi sono stati riempiti da noi: il form riparte "pulito"
+    state.formSporco = false;
+
     aggiornaAnteprimaImmagine();
     mostraSchermata('form');
     el('fTitle').focus();
 }
 
+function segnaFormSporco() {
+    state.formSporco = true;
+}
+
 function annullaForm() {
+    if (state.formSporco
+        && !window.confirm('Le modifiche non salvate andranno perse. Vuoi davvero uscire?')) {
+        return;
+    }
+
+    state.formSporco = false;
     state.idInModifica = null;
     pulisciErroriForm();
     mostraSchermata('list');
@@ -569,16 +596,23 @@ function pulisciErroriForm() {
     });
     CAMPI_INPUT.forEach((id) => {
         const campo = el(id);
-        if (campo) campo.classList.remove('is-invalid');
+        if (campo) {
+            campo.classList.remove('is-invalid');
+            campo.removeAttribute('aria-invalid');
+            campo.removeAttribute('aria-describedby');
+        }
     });
     el('formError').hidden = true;
 }
 
 function segnalaErrore(idErrore, idCampo, messaggio) {
     const box = el(idErrore);
-    box.textContent = messaggio;
+    const campo = el(idCampo);
     box.hidden = false;
-    el(idCampo).classList.add('is-invalid');
+    box.textContent = messaggio;
+    campo.classList.add('is-invalid');
+    campo.setAttribute('aria-invalid', 'true');
+    campo.setAttribute('aria-describedby', idErrore);
 }
 
 // Controlli lato client: messaggi sotto il campo, mai alert()
@@ -707,8 +741,8 @@ async function salvaEvento(e) {
             return;
         }
         const box = el('formError');
-        box.textContent = messaggioErrore(payload, 'salvataggio');
         box.hidden = false;
+        box.textContent = messaggioErrore(payload, 'salvataggio');
         box.scrollIntoView({ block: 'center', behavior: 'smooth' });
         return;
     }
@@ -792,8 +826,8 @@ async function eliminaEvento() {
             return;
         }
         const box = el('deleteError');
-        box.textContent = messaggioErrore(payload, 'eliminazione');
         box.hidden = false;
+        box.textContent = messaggioErrore(payload, 'eliminazione');
         return;
     }
 

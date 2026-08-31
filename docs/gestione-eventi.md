@@ -99,7 +99,8 @@ l'autore e stai autorizzando il tuo stesso script sul tuo foglio.
 Se al passo 4 hai già eseguito `setup`, è fatto. Altrimenti: funzione `setup` › **Esegui**.
 
 Cosa fa: crea (o allinea) la scheda **Eventi** con le intestazioni giuste, blocca la prima riga e
-imposta le colonne delle date come testo semplice, così Sheets non le trasforma in date "sue".
+imposta come testo semplice tutte le colonne di testo (da `id` a `image`), così Sheets non converte
+da solo né le date né gli orari: un `15:00` scritto nella colonna `time` resta il testo `15:00`.
 
 Verifica nel pannello **Registro di esecuzione**, in basso: devi leggere il nome del foglio, il suo
 URL e la riga `ADMIN_PASSWORD configurata correttamente.` Se invece dice
@@ -264,7 +265,8 @@ modificato qualcosa mentre eri sulla pagina.
 
 1. Trova l'evento nell'elenco e premi **Modifica**.
 2. Cambia quello che serve e premi **Salva**.
-3. Se hai cambiato idea, premi **Annulla**: non viene salvato niente.
+3. Se hai cambiato idea, premi **Annulla**: non viene salvato niente. Se avevi già modificato
+   qualcosa, il browser chiede prima una conferma ("Le modifiche non salvate andranno perse").
 
 ### Mettere un evento in bozza (o rimetterlo online)
 
@@ -298,11 +300,11 @@ Per un evento passato, di solito non serve fare niente: scompare da solo dalla h
 | **Data di fine** | **Solo** se l'evento dura più di un giorno (es. sabato e domenica). Se è di un giorno solo, lascia vuoto. |
 | **Orario** | Testo libero: *9:30 - 17:00*, *dalle 15*, *Da definire*. Se lo lasci vuoto, sul sito compare "Da definire". |
 | **Luogo** | Palestra, indirizzo, città. Esempio: *Palestra Shiro Saigo, Via ..., Prato*. |
-| **Descrizione** | Qualche riga: programma, insegnanti delle varie sessioni, quota di partecipazione, se la prenotazione è obbligatoria, come iscriversi. È il testo che si apre insieme alla locandina. |
+| **Descrizione** | Qualche riga: programma, insegnanti delle varie sessioni, quota di partecipazione, se la prenotazione è obbligatoria, come iscriversi. Puoi **andare a capo**: le righe che scrivi qui restano separate anche sul sito, così puoi tenere il programma su più righe. È il testo che il visitatore legge quando apre la scheda dell'evento. |
 | **Insegnanti / Organizzatore** | Chi conduce o chi organizza. Esempio: *Ki No Kenkyukai Italia* oppure *Piero Messeri*. |
 | **Tipo di evento** | Solo un'etichetta per distinguerli: *Seminario*, *Stage*, *Esame*, *Evento (altro)*. Nel dubbio scegli *Evento (altro)*. |
 | **Link per maggiori informazioni** | Indirizzo della pagina con i dettagli o del volantino online (es. la pagina dei seminari di knkitalia.it). Deve iniziare con `http://` o `https://`. Sul sito diventa il bottone **Maggiori Info**. |
-| **Immagine / locandina** | Indirizzo internet dell'immagine (vedi sotto). Se c'è, la scheda in home diventa apribile e mostra la locandina. |
+| **Immagine / locandina** | Indirizzo internet dell'immagine (vedi sotto). In home la scheda dell'evento si apre sempre, anche senza immagine; se l'immagine c'è, si vede la locandina sopra la descrizione. |
 | **Pubblicato sul sito** | Spuntato = lo vedono tutti. Non spuntato = bozza, lo vedi solo tu qui. |
 
 \* campi obbligatori.
@@ -354,11 +356,16 @@ massimo **cinque**: se ce ne sono di più, i successivi restano fuori finché i 
    che sia stato premuto Salva**. Senza quella proprietà, ogni tentativo risulta "Password non valida".
 4. Cambiare la password non richiede di ripubblicare niente: si aggiorna la proprietà e basta.
 
-### "Troppi tentativi uno dopo l'altro"
+### "Dopo 10 password sbagliate l'accesso si blocca per circa 15 minuti"
 
-Dopo **10 password sbagliate** l'accesso si blocca per circa **15 minuti**. Il blocco è del sistema,
-non del singolo telefono: se un istruttore sbaglia dieci volte, per un quarto d'ora **non entra
-nessuno**, nemmeno con la password giusta. Aspetta e riprova con calma, senza tentare a caso.
+Dopo **10 password sbagliate** i nuovi tentativi vengono respinti per circa **15 minuti**, poi
+l'accesso si riapre da solo. Il contatore è del sistema, non del singolo telefono: se un istruttore
+sbaglia dieci volte, il messaggio compare anche agli altri.
+
+**Chi ha la password giusta entra comunque.** La password corretta viene sempre accettata, anche
+mentre il blocco è attivo, e azzera il contatore: il blocco rallenta solo chi tira a indovinare, non
+chiude fuori gli istruttori. Quindi, se leggi questo messaggio, non tentare a caso: scrivi con calma
+la password giusta. Se non te la ricordi, chiedila a chi gestisce il sito.
 
 ### Gli eventi non compaiono sul sito
 
@@ -411,10 +418,16 @@ cambiata. Rifai il login.
 
 ### Ho modificato il foglio Google a mano e adesso qualcosa non va
 
-Usa la pagina di gestione, non il foglio. Scrivere a mano nelle colonne `date` / `dateEnd` un testo
-che non è una data (per esempio *"da definire"*), spostare le colonne o rinominare le intestazioni
-può far sparire la sezione eventi dalla home. Se è già capitato: rimetti nelle colonne delle date
-un valore nella forma `2026-02-15`, oppure cancella la riga e ricrea l'evento dalla pagina di gestione.
+Usa la pagina di gestione, non il foglio: è il modo più semplice per scrivere i dati nel formato
+giusto. Se però in una riga la colonna `date` contiene qualcosa che non è una data (per esempio
+*"da definire"*), **quella singola riga viene ignorata sul sito**: la sezione eventi continua a
+funzionare e gli altri eventi restano visibili, sparisce solo quell'evento (nella pagina di gestione
+lo trovi comunque, con la scritta *Data non indicata*). Anche le date scritte a mano in modo
+imperfetto vengono sistemate dal server: `2026-2-15` e `15/02/2026` valgono `2026-02-15`.
+
+Quello che invece rompe le cose è **spostare le colonne o rinominare le intestazioni**: l'ordine è
+vincolante. Per rimettere a posto una riga: scrivi la data nella forma `2026-02-15`, oppure cancella
+la riga e ricrea l'evento dalla pagina di gestione.
 
 ---
 
@@ -441,8 +454,9 @@ vuoi rendere pubbliche** (numeri di cellulare privati, indirizzi di casa, dati d
 `/admin/eventi.html` è esclusa dai motori di ricerca (`noindex` nella pagina e `Disallow` in
 `src/robots.txt`) e non è collegata da nessun menu. Però resta una normale pagina del sito: chi ne
 conosce o indovina l'indirizzo vede il modulo di login. **L'unica vera protezione è la password**,
-insieme al blocco automatico dopo 10 tentativi sbagliati. Il file `robots.txt` chiede ai motori
-"seri" di non indicizzare, non impedisce l'accesso.
+insieme al rallentamento automatico dei tentativi sbagliati (dopo 10 password errate i nuovi
+tentativi vengono respinti per circa 15 minuti, mentre la password giusta continua a passare).
+Il file `robots.txt` chiede ai motori "seri" di non indicizzare, non impedisce l'accesso.
 
 **4. La password passa dal browser a Google via HTTPS**, quindi è cifrata in transito. Va però tenuto
 presente che, per caricare l'elenco completo, viene inviata dentro l'indirizzo della richiesta:
