@@ -232,7 +232,7 @@ function initRanking() {
         { name: 'William Ducceschi', grade: '3° Dan', type: 'dan', level: 3, photo: 'william-ducceschi.jpg', photoPosition: 'top' },
         { name: 'Giovanni Melani', grade: '2° Dan', type: 'dan', level: 2, photo: 'giovanni-melani.jpg' },
         { name: 'Giuseppe Scocozza', grade: '2° Dan', type: 'dan', level: 2, photo: 'giuseppe-scocozza.jpg' },
-        { name: 'Gianluca Clemente', grade: '2° Dan', type: 'dan', level: 2, photo: 'gianluca-clemente.jpg', photoPosition: 'top' },
+        { name: 'Gianluca Clemente', grade: '3° Dan', type: 'dan', level: 3, photo: 'gianluca-clemente.jpg', photoPosition: 'top' },
         { name: 'Simone Gosetto', grade: '1° Dan', type: 'dan', level: 1, photo: 'simone-gosetto.jpg', photoPosition: 'top' }
     ];
 
@@ -321,107 +321,256 @@ function initRanking() {
 // Events Section
 // ===================================
 
+// Chiave e durata della cache locale: Apps Script e' lento, mostriamo subito
+// l'ultima lista valida e poi rivalidiamo in background.
+const EVENTS_CACHE_KEY = 'kiaikido_events_cache';
+const EVENTS_CACHE_MAX_AGE = 6 * 60 * 60 * 1000; // 6 ore
+
+// Escape dei valori che arrivano dal foglio Google: finiscono in innerHTML
+// e il foglio e' modificabile da piu' persone.
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// Accetta solo URL assoluti http(s); qualsiasi altro schema viene ignorato
+function safeExternalUrl(value) {
+    const url = typeof value === 'string' ? value.trim() : '';
+    return /^https?:\/\//i.test(url) ? url : '';
+}
+
+// Converte 'YYYY-MM-DD' in una data locale a mezzanotte (evita gli scarti di fuso)
+function parseEventDate(value) {
+    if (typeof value !== 'string') return null;
+    const parts = value.trim().slice(0, 10).split('-');
+    if (parts.length !== 3) return null;
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+    if (!year || !month || !day) return null;
+    const date = new Date(year, month - 1, day);
+    return isNaN(date.getTime()) ? null : date;
+}
+
+function readEventsCache() {
+    try {
+        const raw = localStorage.getItem(EVENTS_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.events)) return null;
+        return { savedAt: Number(parsed.savedAt) || 0, events: parsed.events };
+    } catch (error) {
+        // localStorage non disponibile o dato corrotto: la cache e' opzionale
+        return null;
+    }
+}
+
+function writeEventsCache(events) {
+    try {
+        localStorage.setItem(EVENTS_CACHE_KEY, JSON.stringify({
+            savedAt: Date.now(),
+            events: events
+        }));
+    } catch (error) {
+        // In navigazione privata localStorage puo' lanciare: ignoriamo
+    }
+}
+
+function showEventsMessage(container, message) {
+    container.innerHTML = `<p style="text-align: center; color: var(--stone-gray);">${escapeHtml(message)}</p>`;
+}
+
+// Un evento resta visibile finche' la sua data di FINE non e' passata
+function getUpcomingEvents(events) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return events
+        .filter(event => {
+            if (!event) return false;
+            // Senza data di inizio valida la riga non e' renderizzabile: scartala
+            const startDate = parseEventDate(event.date);
+            if (startDate === null) return false;
+            const endDate = parseEventDate(event.dateEnd) || startDate;
+            return endDate >= today;
+        })
+        .sort((a, b) => {
+            const dateA = parseEventDate(a.date);
+            const dateB = parseEventDate(b.date);
+            if (!dateA || !dateB) return 0;
+            return dateA - dateB;
+        })
+        .slice(0, 5); // Mostra max 5 eventi
+}
+
+function renderEvents(container, events) {
+    const upcomingEvents = getUpcomingEvents(events);
+
+    if (upcomingEvents.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--stone-gray); font-size: 1rem;">Nessun evento in programma al momento. Controlla più avanti per nuovi seminari e stage!</p>';
+        return;
+    }
+
+    container.innerHTML = upcomingEvents.map((event, index) => {
+        const startDate = parseEventDate(event.date);
+        if (!startDate) return '';
+        const endDate = parseEventDate(event.dateEnd);
+        const isMultiDay = endDate !== null && startDate !== null && endDate > startDate;
+
+        const day = startDate.getDate();
+        const month = startDate.toLocaleDateString('it-IT', { month: 'short' });
+        const year = startDate.getFullYear();
+        const weekday = startDate.toLocaleDateString('it-IT', { weekday: 'long' });
+
+        // Blocco data: per gli eventi su piu' giorni mostra l'intervallo (es. "15-16")
+        let dayLabel = String(day);
+        let monthLabel = `${month} ${year}`;
+        if (isMultiDay) {
+            const endMonth = endDate.toLocaleDateString('it-IT', { month: 'short' });
+            const endYear = endDate.getFullYear();
+            dayLabel = `${day}-${endDate.getDate()}`;
+            if (year !== endYear) {
+                monthLabel = `${month} ${year} - ${endMonth} ${endYear}`;
+            } else if (month !== endMonth) {
+                monthLabel = `${month}-${endMonth} ${year}`;
+            }
+        }
+
+        // Riga di dettaglio: giorno singolo oppure intervallo di date
+        let whenLabel;
+        if (isMultiDay) {
+            const startWeekday = weekday;
+            const endWeekday = endDate.toLocaleDateString('it-IT', { weekday: 'long' });
+            const endMonthLong = endDate.toLocaleDateString('it-IT', { month: 'long' });
+            const startMonthLong = startDate.toLocaleDateString('it-IT', { month: 'long' });
+            const startPart = startDate.getMonth() === endDate.getMonth() && year === endDate.getFullYear()
+                ? `${startWeekday} ${day}`
+                : `${startWeekday} ${day} ${startMonthLong}`;
+            whenLabel = `Da ${startPart} a ${endWeekday} ${endDate.getDate()} ${endMonthLong}`;
+        } else {
+            whenLabel = weekday.charAt(0).toUpperCase() + weekday.slice(1);
+        }
+
+        const title = escapeHtml(event.title);
+        const imageUrl = safeExternalUrl(event.image);
+        const linkUrl = safeExternalUrl(event.link);
+
+        return `
+            <div class="event-accordion ${imageUrl ? 'has-image' : ''}" data-event-id="${index}">
+                <div class="event-accordion-header">
+                    <div class="event-date">
+                        <div class="event-date-day${isMultiDay ? ' event-date-range' : ''}">${escapeHtml(dayLabel)}</div>
+                        <div class="event-date-month">${escapeHtml(monthLabel)}</div>
+                    </div>
+                    <div class="event-info">
+                        <h3>${title}</h3>
+                        <p class="event-details-short">
+                            📅 ${escapeHtml(whenLabel)} • 📍 ${escapeHtml(event.location)}
+                        </p>
+                    </div>
+                    ${imageUrl ? `
+                    <button class="event-toggle" aria-label="Mostra dettagli" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    ` : ''}
+                </div>
+                <div class="event-accordion-content">
+                    ${imageUrl ? `
+                    <div class="event-image-wrapper">
+                        <img src="${escapeHtml(imageUrl)}" alt="${title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                    </div>
+                    ` : ''}
+                    <div class="event-details-full">
+                        <p class="event-description">${escapeHtml(event.description)}</p>
+                        <div class="event-meta">
+                            ${isMultiDay ? `<p><strong>📆 Date:</strong> ${escapeHtml(whenLabel)}</p>` : ''}
+                            <p><strong>🕐 Orario:</strong> ${escapeHtml(event.time || 'Da definire')}</p>
+                            ${event.organizer ? `<p><strong>👤 Insegnanti:</strong> ${escapeHtml(event.organizer)}</p>` : ''}
+                        </div>
+                        ${linkUrl ? `
+                        <a href="${escapeHtml(linkUrl)}" class="btn btn-outline" target="_blank" rel="noopener">Maggiori Info</a>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Aggiungi event listeners per accordion
+    container.querySelectorAll('.event-toggle').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const accordion = button.closest('.event-accordion');
+            const isExpanded = accordion.classList.contains('active');
+
+            // Chiudi tutti gli altri accordion
+            document.querySelectorAll('.event-accordion.active').forEach(acc => {
+                if (acc !== accordion) {
+                    acc.classList.remove('active');
+                    acc.querySelector('.event-toggle').setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Toggle questo accordion
+            accordion.classList.toggle('active');
+            button.setAttribute('aria-expanded', !isExpanded);
+        });
+    });
+}
+
 async function initEvents() {
     const container = document.querySelector('.events-container');
     if (!container) return;
 
+    const config = window.KIAIKIDO_CONFIG || {};
+    const apiUrl = typeof config.eventsApiUrl === 'string' ? config.eventsApiUrl.trim() : '';
+
+    if (!apiUrl) {
+        showEventsMessage(container, 'Il calendario eventi non è ancora configurato. Torna a trovarci tra poco!');
+        return;
+    }
+
+    // Mostra subito la copia locale se e' recente, poi rivalida in background
+    const cached = readEventsCache();
+    let renderedEvents = null;
+    if (cached && (Date.now() - cached.savedAt) < EVENTS_CACHE_MAX_AGE) {
+        renderedEvents = cached.events;
+        renderEvents(container, renderedEvents);
+    }
+
     try {
-        console.log('Caricamento eventi...');
-        const response = await fetch('/data/events.json');
-        console.log('Response status:', response.status);
-        if (!response.ok) {
-            throw new Error(`Errore nel caricamento: ${response.status} ${response.statusText}`);
-        }
+        const response = await fetch(apiUrl + '?action=list', { cache: 'no-store' });
+        const payload = await response.json();
 
-        const events = await response.json();
-        console.log('Eventi caricati:', events);
-
-        // Filtra eventi futuri e ordina per data
-        const now = new Date();
-        now.setHours(0, 0, 0, 0); // Considera tutto il giorno di oggi come futuro
-
-        const futureEvents = events
-            .filter(event => new Date(event.date) >= now)
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
-            .slice(0, 5); // Mostra max 5 eventi
-
-        if (futureEvents.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: var(--stone-gray); font-size: 1rem;">Nessun evento in programma al momento. Controlla più avanti per nuovi seminari e stage!</p>';
+        if (!payload || payload.ok !== true) {
+            const message = payload && payload.error
+                ? payload.error
+                : 'Errore nel caricamento degli eventi. Riprova più tardi.';
+            showEventsMessage(container, message);
             return;
         }
 
-        container.innerHTML = futureEvents.map((event, index) => {
-            const date = new Date(event.date);
-            const day = date.getDate();
-            const month = date.toLocaleDateString('it-IT', { month: 'short' });
-            const year = date.getFullYear();
-            const weekday = date.toLocaleDateString('it-IT', { weekday: 'long' });
+        const events = Array.isArray(payload.events) ? payload.events : [];
+        writeEventsCache(events);
 
-            return `
-                <div class="event-accordion ${event.image ? 'has-image' : ''}" data-event-id="${index}">
-                    <div class="event-accordion-header">
-                        <div class="event-date">
-                            <div class="event-date-day">${day}</div>
-                            <div class="event-date-month">${month} ${year}</div>
-                        </div>
-                        <div class="event-info">
-                            <h3>${event.title}</h3>
-                            <p class="event-details-short">
-                                📅 ${weekday.charAt(0).toUpperCase() + weekday.slice(1)} • 📍 ${event.location}
-                            </p>
-                        </div>
-                        ${event.image ? `
-                        <button class="event-toggle" aria-label="Mostra dettagli" aria-expanded="false">
-                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </button>
-                        ` : ''}
-                    </div>
-                    <div class="event-accordion-content">
-                        ${event.image ? `
-                        <div class="event-image-wrapper">
-                            <img src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-                        </div>
-                        ` : ''}
-                        <div class="event-details-full">
-                            <p class="event-description">${event.description}</p>
-                            <div class="event-meta">
-                                <p><strong>🕐 Orario:</strong> ${event.time || 'Da definire'}</p>
-                                ${event.organizer ? `<p><strong>👤 Insegnanti:</strong> ${event.organizer}</p>` : ''}
-                            </div>
-                            ${event.link ? `
-                            <a href="${event.link}" class="btn btn-outline" target="_blank" rel="noopener">Maggiori Info</a>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        // Aggiungi event listeners per accordion
-        document.querySelectorAll('.event-toggle').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const accordion = button.closest('.event-accordion');
-                const isExpanded = accordion.classList.contains('active');
-
-                // Chiudi tutti gli altri accordion
-                document.querySelectorAll('.event-accordion.active').forEach(acc => {
-                    if (acc !== accordion) {
-                        acc.classList.remove('active');
-                        acc.querySelector('.event-toggle').setAttribute('aria-expanded', 'false');
-                    }
-                });
-
-                // Toggle questo accordion
-                accordion.classList.toggle('active');
-                button.setAttribute('aria-expanded', !isExpanded);
-            });
-        });
+        // Re-renderizza solo se i dati sono cambiati rispetto alla cache mostrata
+        if (renderedEvents && JSON.stringify(renderedEvents) === JSON.stringify(events)) return;
+        renderEvents(container, events);
     } catch (error) {
-        console.error('Errore caricamento eventi:', error);
-        container.innerHTML = '<p style="text-align: center; color: var(--stone-gray);">Errore nel caricamento degli eventi. Riprova più tardi.</p>';
+        // Rete non disponibile: meglio la cache (anche vecchia) di un errore
+        if (renderedEvents) return;
+        if (cached) {
+            renderEvents(container, cached.events);
+            return;
+        }
+        showEventsMessage(container, 'Errore nel caricamento degli eventi. Riprova più tardi.');
     }
 }
 

@@ -7,8 +7,11 @@ Allow: /
 # Sitemap
 Sitemap: https://www.kiaikidoprato.com/sitemap.xml
 
-# Disallow admin or private areas (if any)
+# Aree riservate: non indicizzare
+# /admin/ copre tutta la cartella; la pagina di gestione eventi e' indicata
+# esplicitamente perche' e' l'unica pagina riservata realmente pubblicata.
 Disallow: /admin/
+Disallow: /admin/eventi.html
 Disallow: /private/
 
 # Allow all crawlers to index video content
