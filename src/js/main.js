@@ -325,6 +325,9 @@ function initRanking() {
 // l'ultima lista valida e poi rivalidiamo in background.
 const EVENTS_CACHE_KEY = 'kiaikido_events_cache';
 const EVENTS_CACHE_MAX_AGE = 6 * 60 * 60 * 1000; // 6 ore
+// Oltre questo limite la copia locale non e' piu' affidabile (eventi messi in
+// bozza o eliminati): meglio un errore che una lista vecchia.
+const EVENTS_CACHE_MAX_STALE = 48 * 60 * 60 * 1000; // 48 ore
 
 // Escape dei valori che arrivano dal foglio Google: finiscono in innerHTML
 // e il foglio e' modificabile da piu' persone.
@@ -504,24 +507,27 @@ function renderEvents(container, events) {
         `;
     }).join('');
 
-    // Aggiungi event listeners per accordion
-    container.querySelectorAll('.event-toggle').forEach(button => {
-        button.addEventListener('click', (e) => {
+    // Aggiungi event listeners per accordion: tutta l'intestazione e' cliccabile
+    // (il click sul bottone risale qui, quindi non serve un secondo listener)
+    container.querySelectorAll('.event-accordion-header').forEach(header => {
+        header.addEventListener('click', (e) => {
             e.preventDefault();
-            const accordion = button.closest('.event-accordion');
+            const accordion = header.closest('.event-accordion');
+            const button = header.querySelector('.event-toggle');
             const isExpanded = accordion.classList.contains('active');
 
             // Chiudi tutti gli altri accordion
             document.querySelectorAll('.event-accordion.active').forEach(acc => {
                 if (acc !== accordion) {
                     acc.classList.remove('active');
-                    acc.querySelector('.event-toggle').setAttribute('aria-expanded', 'false');
+                    const otherButton = acc.querySelector('.event-toggle');
+                    if (otherButton) otherButton.setAttribute('aria-expanded', 'false');
                 }
             });
 
             // Toggle questo accordion
             accordion.classList.toggle('active');
-            button.setAttribute('aria-expanded', !isExpanded);
+            if (button) button.setAttribute('aria-expanded', !isExpanded);
         });
     });
 }
@@ -556,7 +562,7 @@ async function initEvents() {
                 payload && payload.code ? payload.code : 'unknown',
                 payload && payload.error ? payload.error : '');
             if (renderedEvents) return;
-            if (cached) {
+            if (cached && (Date.now() - cached.savedAt) < EVENTS_CACHE_MAX_STALE) {
                 renderEvents(container, cached.events);
                 return;
             }
@@ -571,9 +577,9 @@ async function initEvents() {
         if (renderedEvents && JSON.stringify(renderedEvents) === JSON.stringify(events)) return;
         renderEvents(container, events);
     } catch (error) {
-        // Rete non disponibile: meglio la cache (anche vecchia) di un errore
+        // Rete non disponibile: meglio la cache di un errore, ma solo se non e' troppo vecchia
         if (renderedEvents) return;
-        if (cached) {
+        if (cached && (Date.now() - cached.savedAt) < EVENTS_CACHE_MAX_STALE) {
             renderEvents(container, cached.events);
             return;
         }

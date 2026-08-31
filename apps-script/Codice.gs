@@ -60,10 +60,14 @@ var LIMITI = {
     image: 600
 };
 
-// Anti brute force: max 10 token errati in 15 minuti.
+// Anti brute force: dal decimo token errato nella finestra di 15 minuti la
+// risposta diventa RATE_LIMIT. Cambia solo il messaggio: non esiste alcun
+// blocco a tempo e la password corretta passa sempre (vedi autorizza_).
 var MAX_TENTATIVI = 10;
 var FINESTRA_TENTATIVI_SEC = 15 * 60;
 var CHIAVE_TENTATIVI = 'kiaikido_tentativi_token';
+// Ritardo applicato a ogni tentativo fallito: e il freno vero al brute force.
+var RITARDO_FALLIMENTO_MS = 2000;
 
 var LOCK_TIMEOUT_MS = 10000;
 
@@ -268,41 +272,50 @@ function confrontoCostante_(a, b) {
 /**
  * Restituisce null se il token e valido, altrimenti la risposta di errore
  * (UNAUTHORIZED oppure RATE_LIMIT).
- * Il token viene verificato PRIMA di guardare il contatore: il contatore
- * rallenta soltanto i tentativi falliti e non puo mai bloccare chi conosce la
- * password (altrimenti chiunque, sparando password sbagliate, chiuderebbe
- * fuori gli istruttori). Il contatore vive nella cache di script, quindi e
- * globale: incremento e lettura avvengono sotto lock di script per non essere
- * aggirabili con richieste concorrenti. Se il lock non si ottiene si prosegue
- * comunque: meglio un conteggio imperfetto che un istruttore chiuso fuori.
+ * Logica reale: la password corretta passa SEMPRE (contatore azzerato, nessun
+ * ritardo), cosi nessuno puo chiudere fuori gli istruttori sparando password
+ * sbagliate; ogni tentativo sbagliato costa invece circa 2 secondi di attesa
+ * ed e questo il freno effettivo al brute force, mentre oltre 10 tentativi
+ * nella finestra la risposta diventa RATE_LIMIT come segnale all'utente.
+ * Il contatore vive nella cache di script, quindi e globale: incremento e
+ * lettura avvengono sotto lock di script per non essere aggirabili con
+ * richieste concorrenti. Se il lock non si ottiene si prosegue comunque:
+ * meglio un conteggio imperfetto che un istruttore chiuso fuori. Il ritardo
+ * sta FUORI dal lock, altrimenti rallenterebbe anche gli altri istruttori.
  */
 function autorizza_(token) {
     var cache = CacheService.getScriptCache();
     var lock = LockService.getScriptLock();
     var bloccato = false;
+    var errore;
     try { bloccato = lock.tryLock(LOCK_TIMEOUT_MS); } catch (ignora) { bloccato = false; }
 
     try {
         // 1) Password corretta: contatore azzerato e accesso consentito SEMPRE.
         if (checkToken_(token)) {
             cache.remove(CHIAVE_TENTATIVI);
-            return null;
+            return null;   // ramo di successo: nessun ritardo
         }
 
-        // 2) Password sbagliata: incrementa e decidi in base alla soglia.
+        // 2) Password sbagliata: incrementa e prepara l'errore secondo la soglia.
         var tentativi = parseInt(cache.get(CHIAVE_TENTATIVI) || '0', 10);
         if (isNaN(tentativi) || tentativi < 0) { tentativi = 0; }
         tentativi += 1;
         cache.put(CHIAVE_TENTATIVI, String(tentativi), FINESTRA_TENTATIVI_SEC);
 
         if (tentativi >= MAX_TENTATIVI) {
-            return jsonErr_('RATE_LIMIT', 'Troppi tentativi di accesso non validi. Attendi qualche minuto e riprova.');
+            errore = jsonErr_('RATE_LIMIT', 'Troppi tentativi di accesso non validi. Attendi qualche minuto e riprova.');
+        } else {
+            errore = jsonErr_('UNAUTHORIZED', 'Password non valida.');
         }
-        return jsonErr_('UNAUTHORIZED', 'Password non valida.');
     } finally {
-        // Rilasciato prima del return: nessun deadlock con conLock_().
+        // Rilasciato prima del ritardo e di ogni return: nessun deadlock con conLock_().
         if (bloccato) { lock.releaseLock(); }
     }
+
+    // Freno al brute force: solo sui fallimenti e con il lock gia rilasciato.
+    Utilities.sleep(RITARDO_FALLIMENTO_MS);
+    return errore;
 }
 
 /* =============================== FOGLIO =============================== */
@@ -608,11 +621,27 @@ function pulisciTesto_(valore, limite) {
     return testo;
 }
 
+/**
+ * Fuso del FOGLIO, non dello script: un Date che arriva da getValues() nasce
+ * nel fuso dello spreadsheet, quindi formattarlo con TIMEZONE farebbe
+ * arretrare di un giorno le date digitate a mano se i due fusi differiscono.
+ * Fallback su TIMEZONE se il foglio non e raggiungibile.
+ */
+function fusoFoglio_() {
+    try {
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var tz = ss ? ss.getSpreadsheetTimeZone() : '';
+        return tz || TIMEZONE;
+    } catch (ignora) {
+        return TIMEZONE;
+    }
+}
+
 /** 'YYYY-MM-DD' anche se Sheets ha convertito la cella in Date. */
 function normalizzaData_(valore) {
     if (valore === null || valore === undefined || valore === '') { return ''; }
     if (valore instanceof Date) {
-        return Utilities.formatDate(valore, TIMEZONE, 'yyyy-MM-dd');
+        return Utilities.formatDate(valore, fusoFoglio_(), 'yyyy-MM-dd');
     }
     var testo = String(valore).trim();
     var m = /^(\d{4}-\d{2}-\d{2})/.exec(testo);   // taglia eventuale parte orario
@@ -633,7 +662,7 @@ function normalizzaData_(valore) {
 function normalizzaDataOra_(valore) {
     if (valore === null || valore === undefined || valore === '') { return ''; }
     if (valore instanceof Date) {
-        return Utilities.formatDate(valore, TIMEZONE, "yyyy-MM-dd'T'HH:mm:ssXXX");
+        return Utilities.formatDate(valore, fusoFoglio_(), "yyyy-MM-dd'T'HH:mm:ssXXX");
     }
     return String(valore).trim();
 }

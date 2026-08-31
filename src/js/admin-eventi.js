@@ -273,8 +273,9 @@ function messaggioErrore(payload, contesto) {
             : 'La password non è più valida o la sessione è scaduta: inseriscila di nuovo.';
     }
     if (codice === 'RATE_LIMIT') {
-        return 'Dopo 10 password sbagliate l\'accesso si blocca per circa 15 minuti e poi si riapre da solo, '
-            + 'quindi la password non è cambiata: aspetta e riprova (il blocco vale per tutti gli istruttori).';
+        return 'Sono stati fatti molti tentativi con la password sbagliata. Non c\'è nessun blocco a tempo e '
+            + 'la password non è cambiata: quella giusta viene accettata subito. L\'unica differenza è che ogni '
+            + 'tentativo errato risponde con un paio di secondi di ritardo: scrivila con calma e riprova.';
     }
     if (codice === 'NOT_FOUND') {
         return 'Questo evento non esiste più: forse lo ha già eliminato qualcun altro. Premi "Aggiorna elenco".';
@@ -284,7 +285,9 @@ function messaggioErrore(payload, contesto) {
     return 'Si è verificato un errore inatteso. Riprova tra qualche minuto.';
 }
 
-// Se la password non vale più torniamo alla schermata di accesso
+// Se la password non vale più (o l'accesso risulta bloccato) torniamo alla schermata di accesso.
+// Nel login RATE_LIMIT resta invece un semplice errore nel box: qui ci arrivano solo le
+// chiamate fatte con il token già in sessionStorage.
 function gestisciSessioneScaduta(payload) {
     cancellaToken();
     state.eventi = [];
@@ -311,9 +314,9 @@ function mostraSchermata(nome) {
 // Messaggio temporaneo in cima alla pagina (verde se tutto ok)
 function mostraFlash(messaggio, tipo) {
     const box = el('adminFlash');
-    box.textContent = messaggio;
     box.className = 'admin-flash ' + (tipo === 'error' ? 'admin-flash-error' : 'admin-flash-success');
     box.hidden = false;
+    box.textContent = messaggio;
 
     if (state.timerFlash) clearTimeout(state.timerFlash);
     state.timerFlash = setTimeout(() => { box.hidden = true; }, 6000);
@@ -429,12 +432,11 @@ async function caricaEventi() {
     el('btnReload').disabled = false;
 
     if (!payload || payload.ok !== true) {
-        if (payload && payload.code === 'UNAUTHORIZED') {
+        if (payload && (payload.code === 'UNAUTHORIZED' || payload.code === 'RATE_LIMIT')) {
             gestisciSessioneScaduta(payload);
             return;
         }
         const motivo = messaggioErrore(payload, 'elenco');
-        mostraFlash(motivo, 'error');
         mostraStatoElenco('Non ho caricato l\'elenco degli eventi. ' + motivo
             + ' Quando vuoi riprovare premi "Aggiorna elenco".');
         return;
@@ -736,7 +738,7 @@ async function salvaEvento(e) {
     bottone.textContent = 'Salva';
 
     if (!payload || payload.ok !== true) {
-        if (payload && payload.code === 'UNAUTHORIZED') {
+        if (payload && (payload.code === 'UNAUTHORIZED' || payload.code === 'RATE_LIMIT')) {
             gestisciSessioneScaduta(payload);
             return;
         }
@@ -820,7 +822,7 @@ async function eliminaEvento() {
     bottone.textContent = 'Sì, elimina';
 
     if (!payload || payload.ok !== true) {
-        if (payload && payload.code === 'UNAUTHORIZED') {
+        if (payload && (payload.code === 'UNAUTHORIZED' || payload.code === 'RATE_LIMIT')) {
             chiudiConfermaEliminazione();
             gestisciSessioneScaduta(payload);
             return;

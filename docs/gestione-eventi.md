@@ -45,7 +45,11 @@ File coinvolti nel repository:
 
 1. Vai su [sheets.google.com](https://sheets.google.com) e crea un **foglio vuoto**.
 2. Rinominalo, per esempio `Eventi Ki-Aikido Prato`.
-3. Non serve creare colonne o schede a mano: le crea lo script al passo 5.
+3. Controlla il **fuso orario del foglio**: menu **File › Impostazioni**, campo **Fuso orario**.
+   Deve essere **(GMT+01:00) Roma**. I fogli nuovi nascono spesso su un fuso americano: se è diverso
+   correggilo e clicca **Salva impostazioni**. Con il fuso sbagliato le date possono arretrare di un
+   giorno rispetto a quelle inserite.
+4. Non serve creare colonne o schede a mano: le crea lo script al passo 5.
 
 ### 2. Aprire l'editor Apps Script e incollare il codice
 
@@ -112,13 +116,21 @@ Le colonne create nel foglio sono, in questo ordine:
 
 ### 6. Eseguire `importaSeed()` (eventi iniziali)
 
-Facoltativo ma consigliato, serve a partire con due eventi già dentro e verificare che tutto funzioni.
+Facoltativo, serve ad avere due righe di esempio nel foglio e a verificare che la lettura e la
+scrittura funzionino.
 
 1. Scegli la funzione `importaSeed` dal menu a tendina › **Esegui**.
 2. Nel registro leggerai quali id sono stati importati e quali erano già presenti.
 3. Torna sul foglio: nella scheda **Eventi** vedrai due righe (`evt_1`, `evt_2`).
 
 Puoi rieseguirla senza danni: gli eventi con un id già presente vengono saltati, non duplicati.
+
+> **Questi eventi possono essere già passati.** Sono datati **gennaio e febbraio 2026**: se esegui
+> `importaSeed()` dopo quelle date, in home **non compaiono** — e non c'è nulla da riparare, il sito
+> mostra solo gli eventi non ancora conclusi. Per ritrovarli apri la **pagina riservata di gestione**:
+> sono in fondo all'elenco, con l'etichetta grigia **Già passato**. Vederli lì è la prova che il
+> foglio viene letto correttamente. Per controllare invece che la home funzioni serve un evento con
+> data futura: lo crei al passo 9.
 
 > **Attenzione:** `importaSeed()` legge gli eventi dalla costante `SEED_EVENTI` **dentro
 > `Codice.gs`**, non dal file `apps-script/seed-eventi.json`. Quel JSON è solo una copia leggibile
@@ -169,6 +181,24 @@ Regole:
   la pagina riservata blocca l'accesso: è il comportamento previsto, non un guasto;
 - in questo file **non va mai la password**: `config.js` è scaricabile da chiunque visiti il sito.
 
+> ### ⚠️ Prima di ripubblicare: alza il numero di versione di `config.js`
+>
+> `config.js` viene caricato con un numero di versione nell'indirizzo. Oggi è `?v=1`, in **due** file:
+>
+> - `src/index.html` → `<script src="/js/config.js?v=1" defer></script>`
+> - `src/admin/eventi.html` → la stessa riga
+>
+> I browser tengono in memoria il file **per quel numero**. Se non lo cambi, chi ha già visitato il
+> sito continua a usare la vecchia copia — quella con l'indirizzo vuoto — e vede **per sempre** il
+> messaggio *"Il calendario eventi non è ancora configurato"* (e la pagina di gestione gli blocca
+> l'accesso). Sul tuo computer sembrerà tutto a posto, perché tu ricarichi a forza: il problema lo
+> vedono solo i visitatori abituali, che è il peggior modo per accorgersene.
+>
+> **Quindi: prima di ripubblicare, cambia `?v=1` in `?v=2` in tutti e due i file** (lo stesso numero
+> in entrambi). Vale ogni volta che modifichi `config.js`, quindi anche dopo una eventuale
+> **Nuova distribuzione** che genera un URL `/exec` diverso: aggiornato l'indirizzo, alza di nuovo il
+> numero (`?v=3`, `?v=4`, ...).
+
 ### 9. Ripubblicare il sito
 
 Carica online il contenuto di `src/` come fai di solito (deploy del sito statico). Devono finire
@@ -177,9 +207,14 @@ online, oltre alle pagine, anche: `src/js/config.js`, `src/js/main.js`, `src/adm
 
 Verifiche finali:
 
-1. Apri la home e scendi a **Prossimi Eventi**: devono comparire gli eventi futuri.
+1. Apri la home e scendi a **Prossimi Eventi**: **non** deve comparire l'avviso *"Il calendario eventi
+   non è ancora configurato"*. Se lo vedi, rileggi il passo 8 (indirizzo mancante o numero di versione
+   di `config.js` non aggiornato). Se invece la sezione non elenca nessun evento è normale: quelli nel
+   foglio possono essere tutti già passati.
 2. Apri `https://www.kiaikidoprato.com/admin/eventi.html`, fai login con la password del passo 3.
-3. Crea un evento di prova, controlla che compaia in home, poi eliminalo.
+3. Dalla pagina di gestione crea un **evento di prova con data futura**, controlla che compaia in home,
+   poi eliminalo. È questa la verifica che conta: dice che scrittura, lettura e sito funzionano
+   insieme.
 
 ### 10. Come aggiornare il codice del backend
 
@@ -339,6 +374,14 @@ che aveva in memoria e poi si aggiorna da solo dopo qualche secondo. Quindi:
 2. se l'evento nuovo non c'è, attendi un istante e ricarica di nuovo;
 3. sul telefono può servire chiudere e riaprire il browser.
 
+Se invece il servizio Google **non risponde** (rete assente, Apps Script momentaneamente
+irraggiungibile), la home non mostra un errore: continua a mostrare l'**ultima copia salvata nel
+browser di quel visitatore**, e lo fa **fino a un massimo di 48 ore**. Oltre le 48 ore la copia è
+considerata troppo vecchia e al suo posto compare *"Errore nel caricamento degli eventi"*. In pratica:
+se hai appena modificato un evento e qualcuno continua a vedere la versione precedente anche dopo
+diverse ricariche, prima di rifare il lavoro fai verificare che il servizio risponda
+(Parte A: `<URL>/exec?action=ping`).
+
 Ricorda anche che in home compaiono **solo gli eventi pubblicati e non ancora passati**, e al
 massimo **cinque**: se ce ne sono di più, i successivi restano fuori finché i primi non passano.
 
@@ -356,16 +399,24 @@ massimo **cinque**: se ce ne sono di più, i successivi restano fuori finché i 
    che sia stato premuto Salva**. Senza quella proprietà, ogni tentativo risulta "Password non valida".
 4. Cambiare la password non richiede di ripubblicare niente: si aggiorna la proprietà e basta.
 
-### "Dopo 10 password sbagliate l'accesso si blocca per circa 15 minuti"
+### "Troppi tentativi di accesso non validi"
 
-Dopo **10 password sbagliate** i nuovi tentativi vengono respinti per circa **15 minuti**, poi
-l'accesso si riapre da solo. Il contatore è del sistema, non del singolo telefono: se un istruttore
-sbaglia dieci volte, il messaggio compare anche agli altri.
+**Non esiste nessun blocco a tempo, e non resti chiuso fuori.** La password corretta viene accettata
+**sempre**, anche subito dopo una raffica di tentativi sbagliati, e azzera il contatore.
 
-**Chi ha la password giusta entra comunque.** La password corretta viene sempre accettata, anche
-mentre il blocco è attivo, e azzera il contatore: il blocco rallenta solo chi tira a indovinare, non
-chiude fuori gli istruttori. Quindi, se leggi questo messaggio, non tentare a caso: scrivi con calma
-la password giusta. Se non te la ricordi, chiedila a chi gestisce il sito.
+Quello che accade davvero è solo questo:
+
+- ogni tentativo **sbagliato** costa un paio di secondi di attesa prima della risposta: serve a
+  rendere lento chi tira a indovinare, e non riguarda chi scrive la password giusta;
+- dal **decimo** tentativo sbagliato (contati nell'arco di un quarto d'ora) cambia il **messaggio**: da
+  *"Password non valida"* a *"Troppi tentativi di accesso non validi. Attendi qualche minuto e
+  riprova."* Cambia la frase, non le regole — la password giusta continua a passare, e non serve
+  aspettare niente.
+
+Il contatore è del sistema, non del singolo telefono: se un istruttore sbaglia dieci volte, il
+messaggio nuovo lo leggono anche gli altri, che però entrano regolarmente scrivendo la password
+giusta. Quindi, se ti compare quel messaggio, smetti di tentare a caso: scrivi con calma la password
+giusta e se non te la ricordi chiedila a chi gestisce il sito.
 
 ### Gli eventi non compaiono sul sito
 
@@ -454,9 +505,11 @@ vuoi rendere pubbliche** (numeri di cellulare privati, indirizzi di casa, dati d
 `/admin/eventi.html` è esclusa dai motori di ricerca (`noindex` nella pagina e `Disallow` in
 `src/robots.txt`) e non è collegata da nessun menu. Però resta una normale pagina del sito: chi ne
 conosce o indovina l'indirizzo vede il modulo di login. **L'unica vera protezione è la password**,
-insieme al rallentamento automatico dei tentativi sbagliati (dopo 10 password errate i nuovi
-tentativi vengono respinti per circa 15 minuti, mentre la password giusta continua a passare).
-Il file `robots.txt` chiede ai motori "seri" di non indicizzare, non impedisce l'accesso.
+insieme al rallentamento automatico dei tentativi sbagliati: ogni password errata costa un paio di
+secondi prima della risposta, e dal decimo errore il messaggio diventa *"Troppi tentativi"*. Non c'è
+però nessun blocco: chi insiste può continuare a provare, solo molto più lentamente — il che rende
+decisiva la **lunghezza** della password (Parte A, passo 3: almeno 12 caratteri). Il file
+`robots.txt` chiede ai motori "seri" di non indicizzare, non impedisce l'accesso.
 
 **4. La password passa dal browser a Google via HTTPS**, quindi è cifrata in transito. Va però tenuto
 presente che, per caricare l'elenco completo, viene inviata dentro l'indirizzo della richiesta:
